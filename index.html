@@ -2,6 +2,15 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<!-- InternalBeyond Mobile v146-p · 晨雾蓝与日历重叠修缮轮（相遇卡明亮态回暖 / 按日期日历浮球重叠根修） -->
+<!-- v147-p 修订单（MCP 下单链专修；本轮其余条目属另一端专属模块，-p 线无涉）：①工具 schema 完整回传——buildToolsBlock 原先只给 AI 看 120 字描述＋裸参数名，类型/枚举/嵌套/字段说明全丢，麦当劳/瑞幸这类多步下单流程只能靠参数名瞎猜；现描述放宽至 2000 字并附完整 inputSchema JSON（单工具 3000 字安全截断兜底），connect 落库 description 上限 600→6000（已连服务器需在 MCP 卡重连一次刷新）。②截断链整治——工具结果 runToolAt 1200 / 回传 700 两刀退役，统一 12000 并改 _ibCut 安全截断（不从 emoji 等代理对中间切开产生乱码、截断必明示）：createOrder 的支付链接/orderDetail 常在千字之后，此前一刀下去支付信息全军覆没——「订单号出来了就是找不到订单没法付款」的直接根子；菜单看不全同根同修。③_extract 补读 structuredContent（MCP 2025-06-18 CallToolResult 标准字段）——原实现只读 content、结构化结果整个扔掉。④品牌卡解析重写——_mcpBrandParse 支持 {success,code,data:{…}} 信封逐层下钻（≤4 层）＋全树有界深搜，新认 payH5Url/payOrderUrl/payOrderQrCodeUrl 等支付字段，卡面新增「去支付/支付二维码」按钮（点按不触发展开），说明文档混排围栏 JSON 也能捞；解析不动但文本含支付链接时同样给按钮。⑤关键结果备忘——含订单/支付字段的 MCP 结果此前 fed=true 一轮即失忆，现窗口期内把最近 2 条这类原文以备忘持续注入（fed 记账不动）。⑥AI付 复核：不走 MCP、不经截断链、_gwFeedQ 通道无 fed 失忆——无同类问题，零改动。⑦版本联动 v147-p。 -->
+<!-- v146-p 修订单：①相遇纪念卡明亮态回暖「晨雾蓝」——上一版「月光水银」的石墨蓝灰在白卡上偏暗、观感发怪（用户截图对照旧版浅蓝款）：明亮态改回界面同族浅蓝——主线/外晕 #95a1b0→#a9bcd6、液体 #5d6b7d→#7f99ba（饱和 ~29%、明度 ~61%，不艳也不沉），主线不透明度 .72→.85 恢复旧版那样清晰的一笔；头像玻璃带与进度条液柱同族换浅蓝（rgba(150,172,204,·) / #c8d5e6→#8ba3c2 渐变）。暗色态用户已认可，一字节不动。②「按日期查看」日历右上角按钮重叠根修——主题浮球 .theme-drop 与会话双滑杆钮 #chat-side-btn 是 body 级 fixed(z38)，而 #cvcal(z45) 关在 #conv(z35) 的堆叠上下文里被封顶，两枚浮球必然盖到日历头部「今天」一带；现打开日历给 body 挂 cvcal-open、按 on-sub 同款把两钮 display:none，cvcalClose 先摘类再判空、任何关闭路径不残留。③版本联动 v146-p。本轮其余条目属另一端专属模块，-p 线无涉。 -->
+<!-- InternalBeyond Mobile v145-p · 双层根修与低饱和重制轮（英雄区方框投影双层分离根修 / 相遇纪念卡低饱和「月光水银」重制 / MCP 浏览器版独立与边界整治） -->
+<!-- v145-p 修订单：①英雄区方形投影终修——v146 字效（渐变玻璃字面＋三层贴形投影）观感原样保留，实现改「双层分离」：字面渐变从 .tp-time 整体裁切下放到 >span/>i 子元素逐字符裁切（180deg 纯纵向渐变，两种裁法逐像素等价），三层投影从 filter:drop-shadow 移入新增影层 .tp-sh（与本体同构的隐形副本，text-shadow 承载、z-index:-1 垫在 .tp-time 自有堆叠上下文最底、tickClock 同步 tp-hh2/tp-mm2）。至此渐变裁切元素不再挂任何 filter/text-shadow：filter×background-clip:text 在移动端 Chromium/WebView 渲成整块矩形（v143-p 的判断，方框真凶）与 text-shadow 盖住渐变字面发黑（v144-p 的判断）本是「面与影同挂一个元素」这同一处结构的两个症状——拆开后同时消失；桌面浏览器两种写法都渲染正常，故上一轮的无头核对看不出方框。暗色实字分支随结构补写子元素实色 fill、影层隐藏，v143-p 收紧的暗色贴形投影原样；冒号 <i> 自带背景后，v99-m 记录的「透明字身＋无背景＋opacity 分组被画空」三条件不再凑齐。②相遇纪念卡低饱和重制（用户定向：不要高饱和，设计自定）——「月光水银」方案：明亮态主线/外晕 #6f92c6→#95a1b0（雾岩灰蓝，HSL 饱和 ~10%）、液体 #4a86d4→#5d6b7d（石墨蓝灰 ~15%）；暗色态 #8db0d8/#eef5ff→#aab5c2/#e9eef4（银灰月光）；各层不透明度与发光晕整体收敛，白色高光短段 l-glint 提为主角——层次改由明度差与玻璃高光撑起，不靠色彩浓度。头像玻璃带撤 var(--acc) 着色改中性磨砂灰（明暗两套），进度条液柱撤强调色渐变与外发光、改石墨灰蓝渐变＋暗色银灰款——卡内大面积图形全族去饱和，仅保留「&」与倒计时数字等文字小点缀的强调色。轨道几何、爱心路径、8.4s 流速、reduced-motion 口径零改动。③MCP 边界整治（浏览器版独立）——本文件为公开部署版、只面向浏览器环境：_post 传输层移出另一端专属分支、退为「fetch → 跨域中转」双级（行为对浏览器用户逐字节等价）；「跨域中转」栏 hint、列表 hint、两张预设卡描述、失败提示与 GUIDE → DIY 的 MCP 段落全部改为纯浏览器口径；历史修订单（v143-p / v144-p 头注）中涉及另一端实现细节的句段同轮改写。两端 MCP 文案自此分开维护。④配套升级版中转 cors-relay-worker-v2.js（独立文件，部署到 Cloudflare Worker，不放进本仓库——GitHub Pages 是静态托管、不会执行它）：目标主机白名单＋可选口令 ?k=（填栏写成 https://xxx.workers.dev/?k=口令&u=，现有拼接逻辑直接支持）；预检回显 Access-Control-Request-Headers 并显式列出 authorization——Fetch 规范下 Allow-Headers:* 不覆盖 Authorization 头，旧版 worker 对带令牌请求预检必败（实用性 BUG）；转发响应剥 content-encoding / content-length。⑤GUIDE 按用户要求本轮除 ③ 的 MCP 段落边界改写外未动（内嵌教程仍为旧版 worker 代码，待解禁后同步）。⑥版本联动 v145-p。 -->
+<!-- InternalBeyond Mobile v144-p · 回退与明亮态修缮轮（英雄区字效回退 v146 原样 / 相遇纪念卡明亮模式流光重新可见） -->
+<!-- v144-p 修订单：①英雄区「字体发黑」根修——.tp-time 走 background-clip:text ＋ -webkit-text-fill-color:transparent，字面颜色其实来自背景层，而 text-shadow 的绘制顺序在背景层之上、字形之下；v143-p 把 filter:drop-shadow 换成 text-shadow 后，阴影直接盖住白→冰透的渐变字面，整块字发灰发黑（用户截图实证）。现明亮分支三层阴影回退 v146 原样（filter:drop-shadow），日期行 .sbh-date 的字重/字号/字距一并回退（属字效改动，且 v86-m r5 已因改错该行返工过一次）。保留上轮排版项：时刻字号 clamp(4.35rem,17.8vw,6.1rem)、行高 0.96、.sb-hero padding 18/12、body.vzh-ios .sbh-top 顶距 6px、锁屏时刻随动、.tp-time small 1.06rem。保留上轮暗色远影收紧（0 9px 24px → 0 1.5px 3.5px / 0 4px 9px）——那才是英雄区「方形投影」的真凶，明亮分支本无此病（v98-m 已收紧过）。②相遇纪念卡明亮模式看不清根修——液团 l-liq / 拖尾 l-flow2 / 亮头 l-flow 三层在明暗两态共用 --caG:#dcebff（近白），压在白色卡面上等于隐形；l-halo(.12) 与白色 l-tube(.16) 在白底同样不可见，只剩 l-base 一根细线（用户截图实证）。现分层色值与不透明度改按主题分流的变量组（--caL/--caG/--caGs/--caHi/--caHaloO/--caTubeO/--caBaseO/--caLiqO/--caTailO/--caHeadO/--caGlintO）：明亮走「深色液体＋白色玻璃壁高光」，层次由明暗差撑起（白底上发光物理性无效），并新增 l-glint 白色高光短段贴亮头同轨（领先 0.8/100 相位），读出玻璃管里的水而非一截深色划痕；暗色态数值沿用 v143-p，一行不动。③（另一端专属条目——v145-p 边界整治：相关代码与描述不再进入公开文件。） -->
+<!-- InternalBeyond Mobile v143-p · 修缮轮（MCP 官方端点连不上根修：浏览器跨域中转 / 相遇纪念卡液态玻璃升级 / 头像框透明化 / 英雄区方形投影与排版修正） -->
+<!-- v143-p 修订单：①MCP「网络错误（可能是 CORS 未放行）」根修——实测 mcp.mcd.cn（OPTIONS/POST 一律 403 且不带 Access-Control-Allow-Origin）与 gwmcp.lkcoffee.com（401 且无 CORS 头）均未对浏览器放行跨域，浏览器直连必然 Failed to fetch，与令牌对错无关（Exa / Parallel 带 CORS * 所以一直正常）；IBMCP 传输层抽成 _post 双级通道：浏览器 fetch → 网络失败且配置了「跨域中转」时自动改走中转重试；_rpc 与 notifications/initialized 同走 _post，超时口径（握手 20s / tools-call 60s）、会话头、404/400 重连、SSE 解析零改动；DIY 页 MCP 卡新增「跨域中转」栏（存 mobilePrefs.mcp.proxy，随备份；{url} 占位或末尾拼接编码地址两种写法），两家品牌预设卡与失败提示指路；GUIDE → DIY 补「跨域中转」一段与可直接部署的 Cloudflare Worker 转发代码。②相遇纪念卡液态玻璃升级——中文昵称 0.14em 疏排收回 0.035em（字距过大）；头像框撤 2.5px 实心双环，改 1px 发丝线＋4.5px 透明玻璃带＋外缘细边（透出背景的玻璃环）；爱心连线改玻璃管三层（7px 外壁＋4.2px 内高光＋1.8px 主笔），流光升级三层液体（5px 液团重模糊＋拖尾＋发光亮头同轨同速 8.4s），如玻璃管里滑动的水；进度条 3→6px 液态玻璃槽（透明凹槽内阴影＋上下沿高光＋发丝描边）＋渐变液柱内高光＋周期斜向流光，prefers-reduced-motion 全部静默。③Profile / 社交圈 .pf-avatar 与主页陪伴头像 .duo-ava 的 3px 实心白框同步透明化（1.5px 半透发丝线＋3.5px 玻璃带，暗色配套）——头像不再一圈厚白边。④英雄区方形投影与排版——暗色时刻残留的 0 9px 24px 远影在灰壁纸上四字投影糊成整块矩形（v98-m 只修了明亮分支），两主题投影全部收紧贴形；明亮分支撤 drop-shadow filter 改 text-shadow（移动端 Chromium 里 filter × background-clip:text 会把投影整块矩形化）；时刻字号 clamp 3.9rem/15.4vw/5.3rem → 4.35rem/17.8vw/6.1rem、行高 0.98→0.96，日期行字重 300→400、字号微增、字距收敛，英雄区 padding 28/22 → 18/12、iOS 款顶距 17→6——时间更大、整块更紧凑不再虚占高宽。⑤版本联动 v143-p。 -->
 <!-- InternalBeyond Mobile v142-p · 纪念卡环线与桌面仪表轮（站点纪念日手动值修复 / 双环流光与名字CP化 / Token 统计挂件三款式 / 导航区新增社交圈 / 桌面图标改名 / 磨砂气泡双色重调） -->
 <!-- v142-p 修订单：①站点相遇纪念日不吃手动值（BUG）——设置 → Calendar「站点纪念日」与电脑端导入的 meetSet.__ib__/__ib 在纪念卡里从未被读取，_caBuildHeros 的站点卡恒按「全体最早聊天」推算（怎么设、怎么导都不变的根因；每位 AI 的手动值本就生效）；现手动值优先、无手动值沿用旧推算，口径对齐电脑端 meetIsoIB。②相遇纪念卡重绘——头像并排改固定 236×74 轨道盘：底层 SVG 画爱心主线（2px 主笔 + 5.5px 同色浅晕），顶层 SVG 沿「左头像环整圈 → 爱心 → 右头像环整圈 → 爱心折返」的闭合轨道跑彗星流光（亮头 + 拖尾双层、pathLength 归一、8.4s 匀速），轨道半径 36.2 正落在头像强调色描边带上、且流光层在头像之上不被描边盖住；减少动效时双层流光隐藏；≤380px 不再缩头像（236px 盘任何机型都放得下）。名字行 CP 化：按字符集给两个名字分派 n-cjk / n-lat——中文加字重与 0.14em 疏排，西文改站内已内嵌的 Cormorant Garamond 600（零新增载荷）放大 1.16em，「&」改衬线斜体，中西混排不再突兀。③Desk 新挂件「Token 仪表盘」——默认关闭，Visual → 桌面「Token 仪表盘挂件」四档：关闭 / 仪表环（缓存命中率圆环＋今日 Token 居中）/ 七日柱（近 7 天输入+输出，今日高亮）/ 极简（今日大数字＋一行明细）；与 Data 页 Token 分区共用同一份 ibTokenStats 台账与单价表（有模型未填单价时费用显 ≥），_tkRecord 落账即刷新、进 Desk / 换款式各刷一次；挂件可长按拖排、设置 → Desk 可隐藏，款式键 wgTk 入主题方案。④导航区 Memory 之后新增「Circle 社交圈」——图标沿用桌面社交圈图标（双人剪影），data-page=beyond 与桌面图标进的是同一页；.dw-item 统一绑定与 TITLES.beyond 均已在册，纯静态一条、零 JS 改动。⑤桌面图标改名 Circle→社交圈（sb-t 与 DK_NAMES 同步；主页下坞 Friends 不动）。⑥磨砂黑 / 磨砂白 / 磨砂灰气泡重调——旧配方我方与 TA 同一底色、仅靠一圈强调色描边区分；现改 iOS 双色式：同一材质家族里 TA 浅我方深（磨砂白配冷调云蓝、磨砂黑配石墨蓝、磨砂灰配深冷灰，明暗主题各一套），描边改同族发丝线并加内侧高光，彻底撤掉强调色描边；液态玻璃、文字色逻辑与毛玻璃视窗门控（.ibbf）零改动；气泡分区 hint 同步改写。⑦GUIDE：日历 App 连线描述、桌面分区挂件清单、Desk 图标清单、社交圈入口说明随改动同步。⑧版本联动 v142-p。原生工程零改动：本轮全部为 index 层（DOM/CSS/JS），沿用现工程直接替换 index 即可。 -->
 <!-- InternalBeyond Mobile v141-p · 名片连线与中转适配轮（相遇纪念卡爱心牵线 / 名字完整显示 / 去掉「每年重复」 / 自定义服务商中转站适配 / 暗色遮罩加深 / GUIDE 中转站说明与 Fork 部署教程） -->
@@ -305,10 +314,10 @@ body.theme-infernal .pf-cover.nocover{background:
   linear-gradient(150deg,rgba(40,60,105,0.6),rgba(20,30,58,0.5))}
 .pf-head{position:relative;margin-top:calc(var(--pf-ava,92px) * -0.34);padding:0 18px 10px;display:flex;align-items:flex-end;gap:12px;text-align:left}/* v76-m r4：昵称区移至头像右侧（v70-m 列式版式退役） */
 .pf-avatar{width:calc(var(--pf-ava,92px)*0.82);height:calc(var(--pf-ava,92px)*0.82);border-radius:50%;margin:0;
-  border:3px solid rgba(255,255,255,0.82);background:var(--soft) center/cover no-repeat;
+  border:1.5px solid rgba(255,255,255,0.60);background:var(--soft) center/cover no-repeat;/* v143-p：#3 3px 实心白框改半透发丝线 */
   display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:calc(var(--pf-ava,92px) * 0.4);color:var(--tx3);
-  box-shadow:0 10px 26px rgba(60,95,150,0.28)}
-body.theme-infernal .pf-avatar{border-color:rgba(56,60,68,0.95);box-shadow:0 10px 26px rgba(0,0,0,0.45)}/* v78-m r6：暗色头像框深蓝改黑灰 */
+  box-shadow:0 0 0 3.5px rgba(255,255,255,0.14),0 9px 22px rgba(60,95,150,0.20),inset 0 1px 1px rgba(255,255,255,0.30)}/* v143-p：#3 外圈 3.5px 玻璃带＋内沿高光 */
+body.theme-infernal .pf-avatar{border-color:rgba(200,220,246,0.26);box-shadow:0 0 0 3.5px rgba(150,182,225,0.10),0 10px 24px rgba(0,0,0,0.42),inset 0 1px 1px rgba(255,255,255,0.12)}/* v143-p：#3 暗色同款玻璃框 *//* v78-m r6：暗色头像框深蓝改黑灰 */
 .pf-name{font-family:var(--serif);font-weight:600;font-size:1.34rem;color:var(--tx);letter-spacing:0.02em;margin-top:0;line-height:1.25;overflow-wrap:anywhere}/* v76-m r4：随行式版式收小、去顶距 */
 .pf-tag{font-family:var(--disp);font-weight:300;font-size:0.58rem;letter-spacing:0.22em;color:var(--tx3);margin-top:6px;text-transform:uppercase}
 .pf-bio{margin:2px 0 0;padding:0 18px 20px;font-size:var(--pf-bio,0.86rem);line-height:1.9;color:var(--tx2);white-space:pre-wrap;text-align:left}/* v61-m t10：上收 8px 贴近昵称、下加 8px 远离作品集 */
@@ -699,6 +708,14 @@ body:not(.theme-infernal) .mcpb-row .mp{color:#132a52}
 .mcpb-pk{font-size:0.7rem;color:var(--tx2);border:1px solid var(--line);border-radius:8px;padding:3px 9px;background:rgba(127,150,200,0.08)}
 .mcpb-pk b{font-size:0.86rem;letter-spacing:0.12em;color:var(--light)}
 body:not(.theme-infernal) .mcpb-pk b{color:#132a52}
+.mcpb-payrow{width:100%;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
+.mcpb-pay{display:inline-flex;align-items:center;justify-content:center;padding:6px 16px;border-radius:10px;font-size:0.78rem;font-weight:700;text-decoration:none;color:#fff;background:linear-gradient(135deg,#1677ff,#0958d9);box-shadow:0 2px 8px rgba(22,119,255,0.35)}
+.mcpb-pay:active{transform:scale(0.97)}
+.mcpb-pay.alt{background:rgba(127,150,200,0.14);color:var(--light);box-shadow:none;border:1px solid var(--glass-line)}
+body:not(.theme-infernal) .mcpb-pay.alt{color:#132a52}
+.mcpb-mcd .mcpb-pay:not(.alt){background:linear-gradient(135deg,#DB0007,#a50006);box-shadow:0 2px 8px rgba(219,0,7,0.3)}
+.mcpb-lk .mcpb-pay:not(.alt){background:linear-gradient(135deg,#2A5CAA,#1b3f7a);box-shadow:0 2px 8px rgba(42,92,170,0.3)}
+.mcpb-payhint{font-size:0.64rem;color:var(--tx2);opacity:0.8}
 .mcpb-sum{flex:1;min-width:0;text-align:right;font-size:0.68rem;color:var(--tx3)}
 .mcpb-logo.mini{width:18px;height:18px;border-radius:6px;display:inline-flex;vertical-align:-4px;margin-right:6px;box-shadow:none}
 .mcpb-logo.mini svg{width:12px;height:12px}
@@ -1332,7 +1349,7 @@ body.theme-infernal .li-chip{color:#0d1524}
 #sec-profile-cal .wgt::after{content:'';position:absolute;left:-30%;top:-55%;width:82%;height:110%;border-radius:50%;
   background:radial-gradient(closest-side,rgba(255,255,255,0.22),transparent 72%);pointer-events:none}
 /* — 锁屏时钟英雄：日期行 + 大字时刻 + 天气 + 历象条 — */
-.sb-hero{padding:28px 20px 22px}/* v70-m r9：上下拉高 */
+.sb-hero{padding:18px 20px 12px}/* v143-p：#4 收紧整块占高 *//* v70-m r9：上下拉高 */
 .sbh-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
 .sbh-main{min-width:0;position:relative;z-index:2}
 .sb-hero .hc-wx{display:none!important}/* v84-m r7：英雄区天气/城市退役——抽屉天气不受影响（任务 6） */
@@ -1353,28 +1370,29 @@ body.theme-infernal .duo-sweep{stroke:#cfe0f8}
 @keyframes duoThumpS{0%,55%,100%{opacity:0.42}62%{opacity:0.85}}
 @media (prefers-reduced-motion:reduce){.duo-sweep{display:none}.duo.small .duo-beat{animation:none}}
 .duo-ava{position:absolute;top:13px;width:56px;height:56px;border-radius:50%;background:var(--soft) center/cover no-repeat;/* v77-m r2：50→56 */
-  border:3px solid rgba(255,255,255,0.82);box-shadow:0 10px 26px rgba(60,95,150,0.28);
+  border:1.5px solid rgba(255,255,255,0.62);box-shadow:0 0 0 3.5px rgba(255,255,255,0.14),0 8px 20px rgba(60,95,150,0.22);/* v143-p：#3 陪伴头像同款玻璃框 */
   display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:600;font-size:1.2rem;color:var(--tx2);overflow:hidden}/* v79-m r2：头像框照搬 Profile 页 .pf-avatar 同参（v78 软衬双环退役） */
-body.theme-infernal .duo-ava{border-color:rgba(56,60,68,0.95);box-shadow:0 10px 26px rgba(0,0,0,0.45)}
+body.theme-infernal .duo-ava{border-color:rgba(200,220,246,0.28);box-shadow:0 0 0 3.5px rgba(150,182,225,0.10),0 10px 24px rgba(0,0,0,0.42)}/* v143-p：#3 */
 .duo-ava.du-l{left:0}.duo-ava.du-r{right:0}
 .duo.small .duo-ava{width:50px;height:50px;top:16px;font-size:1.05rem}/* v81-m r12 */
 .sbh-duo:empty{display:none}/* v81-m r12：「不显示头像」时整块收起 */
 .duo.solo .duo-ava{width:66px;height:66px;top:6px;font-size:1.42rem}/* v79-m r2：单人框独立参数退役，随基类沿用 Profile 头像框同参 */
 .duo.solo .duo-ava.du-l{left:6px}
-.sbh-date{display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:300;font-size:clamp(0.5rem,2.7vw,0.6rem);line-height:1;letter-spacing:clamp(0.12em,1.5vw,0.26em);text-transform:uppercase;color:var(--tx2);white-space:nowrap}/* v86-m r5：还原 v81 原样——上一轮改错了对象（要改的是时钟不是日期行，本轮任务 4） *//* v81-m r12：全宽整行＋字号/字距随屏收缩，日期星期不再折叠截断 */
+.sbh-date{display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:300;font-size:clamp(0.5rem,2.7vw,0.6rem);line-height:1;letter-spacing:clamp(0.12em,1.5vw,0.26em);/* v144-p：#1 日期行回退 v146 原样——v143-p 的提字重收字距属字效改动 */text-transform:uppercase;color:var(--tx2);white-space:nowrap}/* v86-m r5：还原 v81 原样——上一轮改错了对象（要改的是时钟不是日期行，本轮任务 4） *//* v81-m r12：全宽整行＋字号/字距随屏收缩，日期星期不再折叠截断 */
 .sbh-date i{width:1px;height:0.95em;background:currentColor;opacity:0.45;flex:none;font-style:normal}/* v78-m r4：日期分隔·改竖线（HTML 里的字符点同步撤掉，改空 i 画线） */
 .sbh-date span{font-variant-numeric:tabular-nums}/* v81-m r12：截断退役（整行 clamp 收缩兜底） */
 /* v73-m r3：时刻重做——苹果系统字（iOS/macOS 即 SF Pro Display）Bold，锁屏时钟比例；
    冰白半透明字身 + 三层冰蓝外发光 + 一层深蓝灰投影，等宽字体退役（仅保留 tabular-nums 防跳字） */
-.sb-hero .tp-time{margin-top:5px;font-family:var(--sys);font-weight:700;font-size:clamp(3.9rem,15.4vw,5.3rem);line-height:0.98;letter-spacing:-0.032em;font-variant-numeric:tabular-nums;/* v12 任务③：英雄区时刻改 iOS 液态玻璃字身——透明高级质感但保证清晰：玻璃渐变字面（白→冰透）＋drop-shadow 上亮刃/下深晕撑对比度；原八层浮雕 text-shadow 是发虚根因，退役。字号/字距/行高原样 */
-  color:transparent;-webkit-text-fill-color:transparent;
-  background:linear-gradient(180deg,rgba(255,255,255,0.99) 0%,rgba(248,252,255,0.9) 44%,rgba(210,229,250,0.58) 100%);-webkit-background-clip:text;background-clip:text;
-  filter:drop-shadow(0 1px 0 rgba(255,255,255,0.55)) drop-shadow(0 1.5px 3px rgba(24,46,88,0.42)) drop-shadow(0 6px 11px rgba(30,58,105,0.16))}/* v98-m 修复：旧远影 8px/20px 在浅色壁纸下四字投影糊成整块矩形——收紧模糊半径与浓度，让投影跟随字形 */
-body.theme-infernal .sb-hero .tp-time{background:linear-gradient(180deg,rgba(255,255,255,0.98) 0%,rgba(226,240,255,0.85) 46%,rgba(166,197,238,0.52) 100%);
-  filter:drop-shadow(0 1px 0 rgba(220,238,255,0.26)) drop-shadow(0 2px 4px rgba(0,0,0,0.6)) drop-shadow(0 5px 11px rgba(90,150,230,0.2))}/* v12 任务③：暗色同款玻璃字身；v98-m：远影同步收紧贴形 */
+.sb-hero .tp-time{margin-top:5px;font-family:var(--sys);font-weight:700;font-size:clamp(4.35rem,17.8vw,6.1rem);line-height:0.96;/* v143-p：#4 时刻加大 */letter-spacing:-0.032em;font-variant-numeric:tabular-nums;/* v12 任务③：英雄区时刻改 iOS 液态玻璃字身——透明高级质感但保证清晰：玻璃渐变字面（白→冰透）＋drop-shadow 上亮刃/下深晕撑对比度；原八层浮雕 text-shadow 是发虚根因，退役。字号/字距/行高原样 */
+  position:relative;color:transparent;-webkit-text-fill-color:transparent}/* v145-p：#1 方框根修·双层分离——渐变字面下放到子元素、三层投影移入 .tp-sh 影层（见下），本级不再挂 background-clip 与任何 filter/text-shadow：filter×background-clip:text 在移动端 Chromium/WebView 必把投影渲成整块矩形（v143-p 判断正确、方框真凶），text-shadow 又画在渐变字面之上必然发黑（v144-p 判断正确）——两病根同出「面与影同挂一个元素」，拆开后同时消失；桌面渲染与 v146 无异，无头核对因此看不出方框 */
+.sb-hero .tp-time>span:not(.tp-sh),.sb-hero .tp-time>i{background:linear-gradient(180deg,rgba(255,255,255,0.99) 0%,rgba(248,252,255,0.9) 44%,rgba(210,229,250,0.58) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}/* v145-p：#1 v146 渐变字面原配方逐字符下放——180deg 纯纵向渐变，按子元素裁切与整体裁切逐像素等价；冒号 <i> 自带背景后，v99-m 记录的「透明字身＋无背景＋opacity 分组被画空」三条件不再凑齐 */
+.sb-hero .tp-time .tp-sh{position:absolute;inset:0;display:flex;align-items:baseline;z-index:-1;pointer-events:none;user-select:none}/* v145-p：#1 影层——与本体同构的隐形副本，压在 .tp-time 自有堆叠上下文（z-index:2）最底、渐变字面之下 */
+.sb-hero .tp-time .tp-sh span,.sb-hero .tp-time .tp-sh i{background:none;color:transparent;-webkit-text-fill-color:transparent;text-shadow:0 1px 0 rgba(255,255,255,0.55),0 1.5px 3px rgba(24,46,88,0.42),0 6px 11px rgba(30,58,105,0.16)}/* v145-p：#1 v146 三层投影原值（上亮刃/近影/远晕），由字形 text-shadow 承载——贴字形、无矩形化路径 *//* v144-p：#1 回退 v146 原样——v143-p 改 text-shadow 是「字体发黑」根因：background-clip:text 下字面色来自背景层，text-shadow 画在其上直接盖住渐变；明亮分支本无方框病 *//* v98-m 修复：旧远影 8px/20px 在浅色壁纸下四字投影糊成整块矩形——收紧模糊半径与浓度，让投影跟随字形 */
+body.theme-infernal .sb-hero .tp-time>span:not(.tp-sh),body.theme-infernal .sb-hero .tp-time>i{background:none;-webkit-text-fill-color:rgba(244,249,255,.96)}/* v145-p：#1 暗色实字分支随双层结构补写——子元素撤渐变回实色 fill；投影仍由暗色主规则的 text-shadow 继承（v143-p 收紧值原样） */
+body.theme-infernal .sb-hero .tp-time .tp-sh{display:none}/* v145-p：#1 暗色无裁切、无 filter，本无方框病——影层只在明亮分支服役 *//* v144-p：#1 同上回退（本条随后被暗色实字覆写的 filter:none 接管，仅保持与 v146 一致） *//* v12 任务③：暗色同款玻璃字身；v98-m：远影同步收紧贴形 */
 .sb-hero .tp-time span{width:auto;min-width:0}
 .sb-hero .tp-time i{color:inherit;opacity:1;margin:0 0.01em}/* v99-m 任务5：明亮模式冒号不显示的真凶——父级 .tp-time 走 background-clip:text ＋ 字身透明（字面颜色其实来自父级背景），而 opacity 会把这个 <i> 单独提成一个合成组；WebKit 在「字身透明 ＋ 自身没有背景 ＋ 被 opacity 分组」三条同时成立时直接把它画空，冒号就没了。暗色模式走的是实色 fill 分支，所以只在明亮模式复现。撤掉 opacity，冒号与数字同源上色——iOS 原生锁屏的冒号本来也与数字同色。 */
-.sb-hero .tp-time small{font-size:1.02rem;margin:0 0 8px 7px}
+.sb-hero .tp-time small{font-size:1.06rem;margin:0 0 10px 7px}
 /* v81-m r12：360px 断点退役——时刻字号改连续 clamp */
 .hc-wx{display:flex;flex-direction:row;align-items:center;gap:6px;flex:none;margin-top:10px}/* v69-m t5：天气位让给头像组件，改时间下方横排 */
 .hc-wx svg{width:18px;height:18px;fill:none;stroke:var(--acc);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;
@@ -1709,7 +1727,7 @@ body.theme-infernal #ib-live-banner{background:rgba(24,32,54,0.86);border-color:
 #lockscr .lk-wel{position:relative;z-index:2;margin-top:calc(22px + var(--sat));font-family:var(--serif);font-style:italic;font-weight:500;font-size:0.88rem;letter-spacing:0.06em;color:rgba(255,255,255,0.92);text-shadow:0 1px 10px rgba(10,20,40,0.55)}
 
 #lockscr .lk-clk{position:relative;z-index:2;margin-top:7vh;text-align:center}
-#lockscr #lk-time{font-family:var(--sys);font-weight:700;font-size:clamp(3.9rem,15.4vw,5.3rem);line-height:0.98;letter-spacing:-0.032em;color:rgba(255,255,255,0.96);text-shadow:0 2px 22px rgba(8,16,34,0.5);font-variant-numeric:tabular-nums}/* v86-m r3：锁屏时刻＝英雄区同一套规格（任务 3） */
+#lockscr #lk-time{font-family:var(--sys);font-weight:700;font-size:clamp(4.35rem,17.8vw,6.1rem);line-height:0.96;/* v143-p：#4 锁屏时刻＝英雄区同一套规格，随动 */letter-spacing:-0.032em;color:rgba(255,255,255,0.96);text-shadow:0 2px 22px rgba(8,16,34,0.5);font-variant-numeric:tabular-nums}/* v86-m r3：锁屏时刻＝英雄区同一套规格（任务 3） */
 #lockscr #lk-date{margin:0 0 4px;font-family:var(--sys);font-weight:600;font-size:clamp(0.8rem,3.7vw,0.95rem);letter-spacing:-0.004em;color:rgba(255,255,255,0.86);text-shadow:0 1px 8px rgba(8,16,34,0.5)}/* v86-m r3：日期改 iOS 语序并置于时刻之上（任务 3） */
 
 
@@ -1795,7 +1813,7 @@ body.theme-infernal .ph-cn{text-shadow:0 1px 3px rgba(0,0,0,0.5)}
 
 /* ═══ v13 · 本轮订正：英雄区暗色时刻 + iOS 原生感锁屏 ═══ */
 /* 任务①：Infernal 英雄区不用 background-clip 字体。部分 WebKit/PWA 会把 flex 子字形当成透明填充，最终只剩一块渐变矩形；改成半透明实字 + 阴影，仍保留冰透感但保证每次都可见。 */
-body.theme-infernal .sb-hero .tp-time{background:none!important;-webkit-background-clip:border-box;background-clip:border-box;color:rgba(244,249,255,.96);-webkit-text-fill-color:rgba(244,249,255,.96);filter:none;text-shadow:0 1px 0 rgba(255,255,255,.2),0 2px 5px rgba(0,0,0,.58),0 9px 24px rgba(6,14,30,.38)}
+body.theme-infernal .sb-hero .tp-time{background:none!important;-webkit-background-clip:border-box;background-clip:border-box;color:rgba(244,249,255,.96);-webkit-text-fill-color:rgba(244,249,255,.96);filter:none;text-shadow:0 1px 0 rgba(255,255,255,.18),0 1.5px 3.5px rgba(0,0,0,.52),0 4px 9px rgba(6,14,30,.26)}/* v143-p：#4 暗色远影 0 9px 24px 在灰壁纸上四字糊成整块矩形（v98-m 只修了明亮分支）——收紧贴形 */
 /* 任务⑤：锁屏保留原来的上滑/图案/密保逻辑，只收敛视觉。解锁提示不再单独做毛玻璃胶囊。 */
 #lockscr .lk-top{margin-top:calc(15px + var(--sat));gap:6px}
 #lockscr .lk-lockic{width:15px;height:15px;color:rgba(255,255,255,.96);filter:drop-shadow(0 1px 3px rgba(0,0,0,.32))}
@@ -2232,7 +2250,8 @@ raf=requestAnimationFrame(frame);
         <p>配置 AI 的扩展能力。</p>
         <div class="g-sub">
           <p><strong>外部工具</strong>：添加 HTTP 接口让 AI 在对话中调用外部操作（如 Home Assistant 等）。每个工具配置名称、URL、请求方法和参数。支持调用前确认。请求由浏览器直接发出，目标接口需允许跨域（CORS）。</p>
-          <p><strong>MCP 服务器</strong>：连接 MCP 服务器后自动发现可用工具，调用方式与外部工具一致。支持多服务器并行接入，每个服务器可独立启用或禁用其工具。连接失败时请检查跨域（CORS）设置。DIY 页内置<strong>麦当劳</strong>与<strong>瑞幸咖啡</strong>两张官方预设：点「添加」自动填好别名与官方端点（mcp.mcd.cn / gwmcp.lkcoffee.com），再到对应开放平台登录领取个人 Token 填入令牌栏、点「连接」即可接入（令牌随请求以 Authorization: Bearer 发送，只存在你的设备与备份里）；这两家工具的调用结果会渲染成对应品牌主题的小卡片（菜单 / 订单 / 取餐码 / 优惠券自动排版，四种状态各有其形）。用不上可点预设卡右上角 ✕ 隐藏，已添加的服务器也随时可删。</p>
+          <p><strong>MCP 服务器</strong>：连接 MCP 服务器后自动发现可用工具，调用方式与外部工具一致。支持多服务器并行接入，每个服务器可独立启用或禁用其工具。连接失败时请检查跨域（CORS）设置。DIY 页内置<strong>麦当劳</strong>与<strong>瑞幸咖啡</strong>两张官方预设：点「添加」自动填好别名与官方端点（mcp.mcd.cn / gwmcp.lkcoffee.com），再到对应开放平台登录领取个人 Token 填入令牌栏、点「连接」即可接入（令牌随请求以 Authorization: Bearer 发送，只存在你的设备与备份里）；这两家工具的调用结果会渲染成对应品牌主题的小卡片（菜单 / 订单 / 取餐码 / 优惠券自动排版，四种状态各有其形）。用不上可点预设卡右上角 ✕ 隐藏，已添加的服务器也随时可删。补充：麦当劳 / 瑞幸这两枚官方端点<strong>未对浏览器放行跨域</strong>（实测预检即 403 / 401、响应不带 Access-Control-Allow-Origin），与令牌对错无关——浏览器会直接拦下（报「网络错误，可能是 CORS 未放行」），需在 MCP 卡的「跨域中转」栏填入自建转发（见下一段），直连失败时自动改走中转。</p>
+          <p><strong>跨域中转（CORS 代理）</strong>：给浏览器环境准备的自建转发。原理：请求先发给你自己的中转服务，由它在服务器侧转发到目标端点并补上 CORS 响应头（服务器对服务器不受浏览器跨域限制）。推荐 Cloudflare Worker（免费额度足够）：新建 Worker → 粘贴下方代码 → 部署，把「https://你的名字.workers.dev/?u=」填进 MCP 卡的「跨域中转」栏即可；地址里含 {url} 则按占位符替换，否则在末尾拼接编码后的目标地址。令牌等请求头会原样经过你的 Worker、不落任何第三方，因此<strong>务必只用自己部署的中转、不要用公共代理</strong>。Worker 代码：<code style="display:block;white-space:pre-wrap;word-break:break-all;font-size:0.74em;line-height:1.65;margin-top:6px;padding:8px 10px;border-radius:10px;background:rgba(120,140,170,0.12)">export default{async fetch(r){const u=new URL(r.url).searchParams.get(&quot;u&quot;);if(!u)return new Response(&quot;missing u&quot;,{status:400});if(r.method===&quot;OPTIONS&quot;)return new Response(null,{status:204,headers:C()});const h=new Headers(r.headers);[&quot;origin&quot;,&quot;referer&quot;,&quot;host&quot;,&quot;cf-connecting-ip&quot;,&quot;x-forwarded-for&quot;].forEach(k=&gt;h.delete(k));const p=await fetch(u,{method:r.method,headers:h,body:[&quot;GET&quot;,&quot;HEAD&quot;].includes(r.method)?undefined:r.body});const o=new Headers(p.headers);for(const[k,v]of Object.entries(C()))o.set(k,v);return new Response(p.body,{status:p.status,headers:o})}};const C=()=&gt;({&quot;Access-Control-Allow-Origin&quot;:&quot;*&quot;,&quot;Access-Control-Allow-Methods&quot;:&quot;*&quot;,&quot;Access-Control-Allow-Headers&quot;:&quot;*&quot;,&quot;Access-Control-Expose-Headers&quot;:&quot;*&quot;});</code></p>
           <p><strong>联网搜索</strong>：同一处还内置 <strong>Parallel</strong> 与 <strong>Exa</strong> 两张联网搜索预设（两家官方公开端点，无需令牌、允许浏览器直连）。点「添加」即自动入列并连接，之后 AI 在对话里需要时会自己调用搜索 / 抓网页工具（默认仍会先询问你是否允许，可在 MCP 卡关掉「调用前询问」）。公开端点有限流，重度使用可到对方官网领取 API key 填入该服务器的令牌栏。<!-- v131-p --></p>
           <p><strong>连接 GitHub 仓库（MCP 进阶方案）</strong>：只需要读改仓库文件时，用 ICode 页 → GitHub 分区的内置直连即可，无需本方案。以下面向想让 AI 通过 MCP 直接调用 GitHub 接口的进阶用法。<!-- v101-m 任务3：步骤拆行 --></p>
           <p><strong>①</strong> 在 GitHub 生成访问令牌（勾选 repo 权限）。</p>
@@ -2467,7 +2486,7 @@ self.addEventListener(&#x27;fetch&#x27;,function(e){
         <div class="sbh-date" aria-label="今日日期"><span id="tp-fdate">—</span><i aria-hidden="true"></i><span id="tp-week">—</span></div><!-- v78-m r4：分隔改竖线；v81-m r12：整行提到头像列之外全宽显示，不再折叠截断（任务 18） -->
         <div class="sbh-top">
           <div class="sbh-main">
-            <div class="tp-time" aria-label="数字时刻"><span id="tp-hh">--</span><i>:</i><span id="tp-mm">--</span></div>
+            <div class="tp-time" aria-label="数字时刻"><span class="tp-sh" aria-hidden="true"><span id="tp-hh2">--</span><i>:</i><span id="tp-mm2">--</span></span><span id="tp-hh">--</span><i>:</i><span id="tp-mm">--</span></div><!-- v145-p：#1 .tp-sh 影层副本（aria-hidden；明亮分支承载三层投影，暗色隐藏） -->
             <div class="hc-wx" id="hc-wx" style="display:none" aria-label="天气">
               <svg viewBox="0 0 24 24"><path id="hc-wx-ic" d=""/></svg>
               <b id="hc-wx-t">--°</b><span id="hc-wx-c">—</span>
@@ -2993,12 +3012,13 @@ self.addEventListener(&#x27;fetch&#x27;,function(e){
       <div class="card fx-card"><div class="fx-ico"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 0-4 4v1H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="14" r="2"/></svg></div>
         <div class="tog"><div class="tog-m"><div class="tog-t">启用 MCP 工具</div><div class="tog-s">连接服务器后自动发现可用工具，调用方式与外部工具一致。</div></div><div class="sw2" id="mcp-enabled"></div></div>
         <div class="tog"><div class="tog-m"><div class="tog-t">调用前询问</div><div class="tog-s">AI 发起调用时先弹确认卡，由你决定是否执行。</div></div><div class="sw2" id="mcp-confirm"></div></div>
+        <div class="f-group" style="margin:12px 2px 4px"><label>跨域中转（CORS 代理，选填）</label><input id="mcp-proxy" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://你的中转.workers.dev/?u="><p class="hint" style="margin:6px 0 0">麦当劳、瑞幸这类未对浏览器放行跨域的官方端点，浏览器无法直连：填入你自己部署的转发地址后，直连失败会自动改走中转（地址含 {url} 则占位替换，否则末尾拼接编码后的目标地址）。令牌会原样经过中转——务必只用自己部署的服务、勿用公共代理。部署方法见 GUIDE → DIY「跨域中转」。</p></div><!-- v145-p：#3 文案独立成浏览器版 --><!-- v143-p：#1 -->
         <div id="mcp-list"></div>
         <div id="mcp-presets"></div><!-- v130 需求①：官方预设卡 -->
         <div style="height:10px"></div>
         <button class="btn wide" id="mcp-add">＋ 添加服务器</button>
       </div>
-      <p class="hint">支持多服务器并行接入，每个服务器可独立启用或禁用其工具。连接失败时请检查跨域（CORS）设置。麦当劳 / 瑞幸预设已预填官方端点，到对应开放平台（open.mcd.cn/mcp、open.lkcoffee.com）登录领取个人 Token 填入令牌栏即可连接。配置随备份导出，电脑版不读取手机端的 MCP 列表。</p>
+      <p class="hint">支持多服务器并行接入，每个服务器可独立启用或禁用其工具。麦当劳 / 瑞幸预设已预填官方端点，到对应开放平台（open.mcd.cn/mcp、open.lkcoffee.com）登录领取个人 Token 填入令牌栏即可连接——这两家未对浏览器放行跨域，需在上方「跨域中转」栏填自建转发（部署方法见 GUIDE → DIY）。其余连接失败请检查跨域（CORS）设置。配置随备份导出，电脑版不读取手机端的 MCP 列表。</p>
       <div class="sec-label">AI付（Alipay · Agent Payment）</div><!-- v136-p：②自 API 页 → 工具 迁入（v97-m 任务7 原卡；id 与存储键不变）；默认关闭；B 档——AI 发起请求卡，用户亲手完成支付并回传结果 -->
       <div class="glass card">
         <div class="tog nb"><div class="tog-m"><div class="tog-t">启用 AI付</div><div class="tog-s">支付宝面向智能体的支付工具同名功能。开启后 AI 可用 &lt;ws_payreq/&gt; 在聊天里生成一张 AI付 卡：写明用途、金额与收款方。付款永远由你亲手在支付宝完成，点「已完成支付 / 拒绝」后结果才回传给 TA。</div></div><div class="sw2" id="pay-on"></div></div>
@@ -5948,7 +5968,7 @@ function tickClock(){
   var n=new Date();
   var h24=n.getHours();
   var hh=p2(H24?h24:((h24%12)||12)),mm=p2(n.getMinutes());
-  [['tp-hh',hh],['tp-mm',mm],/* v70-m r8：wgt-* 旧组件写入项与读秒变量随霜盏钟一并清除 */
+  [['tp-hh',hh],['tp-mm',mm],['tp-hh2',hh],['tp-mm2',mm],/* v145-p：#1 影层副本随时刻同步 *//* v70-m r8：wgt-* 旧组件写入项与读秒变量随霜盏钟一并清除 */
    ['tp-fdate',MEN[n.getMonth()]+' '+n.getDate()+', '+n.getFullYear()]].forEach(function(a){
     var e=document.getElementById(a[0]);if(e&&e.textContent!==a[1])e.textContent=a[1]});
   var wd=WEN[n.getDay()],wde=document.getElementById('tp-week');
@@ -6702,6 +6722,7 @@ WS_ICON.payreq='<svg class="ws-op-icon" viewBox="0 0 16 16" fill="none" stroke="
 /* ═══ v130 需求①：麦当劳 / 瑞幸咖啡 MCP 品牌识别与专属渲染卡 ═══
    识别按别名（mcp.<别名>.<工具> 的第二段）：mcdonalds/mcd 系 → 麦当劳；luckin/ruixing 系 → 瑞幸。
    品牌卡保留 .ws-op-card 与 .pending/.warn 类——attachConfirmBtns 的按序对位与确认按钮注入原样生效。 */
+function _ibCut(s,n){s=String(s==null?'':s);if(!(n>0)||s.length<=n)return s;var c=s.slice(0,n),cc=c.charCodeAt(c.length-1);if(cc>=0xD800&&cc<=0xDBFF)c=c.slice(0,-1);return c+'\n…[已截断：原文 '+s.length+' 字符]'}/* v147-p：#2 安全截断——不再从代理对（emoji 等）中间切开产生乱码 �，且截断必明示、不再无声吞尾 */
 function _mcpBrandOfAlias(a){a=String(a||'').toLowerCase();
   if(/^(mcdonalds?|mcd|mdl|maidanglao)$/.test(a))return 'mcd';
   if(/^(luckin(coffee)?|ruixing|lk|lkcoffee)$/.test(a))return 'lk';
@@ -6726,11 +6747,34 @@ function _mcpToolLabel(name){/* 工具名 → 动作友好名（识别常见英�
   for(var i=0;i<M.length;i++){if(M[i][0].test(l))return M[i][1]+' · '+t}
   return t}
 function _mcpPriceFmt(v){var t=String(v).trim();return /^-?\d+(\.\d+)?$/.test(t)?('¥'+t):t}
-function _mcpBrandParse(txt){/* 尽力而为的结构化解析：JSON → 菜单行/订单/取餐码/优惠券/门店/键值对；解析不动返回 null 走通用文本 */
+function _mcpBrandParse(txt){/* 尽力而为的结构化解析：JSON → 菜单行/订单/取餐码/优惠券/门店/键值对/支付链接；解析不动返回 null 走通用文本 *//* v147-p：#4 重写——原版只在 JSON 顶层找字段、data 不是数组就不下钻，{success,code,data:{orderId,payH5Url,…}} 这类标准信封全数漏解，也不认识任何支付字段：服务器把 payH5Url 老老实实给了、卡上就是不出「去支付」 */
   var t=String(txt||'').trim();if(!t)return null;
   t=t.replace(/^```[a-zA-Z]*\s*/,'').replace(/```\s*$/,'').trim();
-  var j=null;try{j=JSON.parse(t)}catch(e){return null}
-  function pick(o,keys){if(!o)return undefined;for(var i=0;i<keys.length;i++){var v=o[keys[i]];if(v!==undefined&&v!==null&&v!=='')return v}return undefined}
+  var j=null;try{j=JSON.parse(t)}catch(e){
+    var fb=t.match(/```(?:json)?\s*([\s\S]*?)```/i);if(fb){try{j=JSON.parse(fb[1].trim())}catch(eF){}}
+    if(j==null){var mJ=t.match(/\{[\s\S]*\}|\[[\s\S]*\]/);if(mJ){try{j=JSON.parse(mJ[0])}catch(e2){}}}
+  }/* v147-p：#4 文本混排 JSON（说明文档＋围栏 JSON）也捞一把；纯文本仍回退通用展示 */
+  if(j==null||typeof j!=='object')return null;
+  function pick(o,keys){if(!o||typeof o!=='object')return undefined;for(var i=0;i<keys.length;i++){var v=o[keys[i]];if(v!==undefined&&v!==null&&v!=='')return v}return undefined}
+  var lvls=[],cur=j;
+  for(var dp=0;dp<4;dp++){/* v147-p：#4 信封逐层下钻：{success,code,data:{…}}/{result:{…}} 最多剥 4 层，字段检索深层优先 */
+    if(!cur||typeof cur!=='object'||Array.isArray(cur))break;
+    lvls.push(cur);
+    var nx=(cur.data!==undefined&&cur.data!==null)?cur.data:((cur.result!==undefined&&cur.result!==null)?cur.result:undefined);
+    if(!nx||typeof nx!=='object')break;
+    cur=nx;
+  }
+  function pickL(keys){for(var i=lvls.length-1;i>=0;i--){var v=pick(lvls[i],keys);if(v!==undefined)return v}return undefined}
+  function deepFind(root,keyRe,valTest){/* v147-p：#4 有界深搜：整棵结果树按键名捞关键字段（≤6 层、≤600 节点），orderDetail/payInfo 里埋的也能捞出 */
+    var hit,seen=0;
+    (function walk(o,d){
+      if(hit!==undefined||!o||typeof o!=='object'||d>6||++seen>600)return;
+      if(Array.isArray(o)){for(var i=0;i<o.length&&hit===undefined;i++)walk(o[i],d+1);return}
+      for(var k in o){if(hit!==undefined)break;var v=o[k];
+        if(keyRe.test(k)&&v!=null&&typeof v!=='object'){if(!valTest||valTest(String(v),k))hit=String(v)}
+        else if(v&&typeof v==='object')walk(v,d+1)}
+    })(root,0);
+    return hit}
   function itemRow(it){
     if(typeof it==='string')return {n:it,p:'',q:'',s:''};
     if(!it||typeof it!=='object')return null;
@@ -6741,30 +6785,35 @@ function _mcpBrandParse(txt){/* 尽力而为的结构化解析：JSON → 菜单
     if(n===undefined&&pz===undefined)return null;
     return {n:n!==undefined?String(n):'',p:pz!==undefined?String(pz):'',q:qty!==undefined?String(qty):'',s:sp!==undefined?String(sp).slice(0,42):''};
   }
-  var out={rows:[],kv:[],coupons:[],total:'',orderNo:'',pickup:'',status:'',note:'',more:0};
+  var out={rows:[],kv:[],coupons:[],total:'',orderNo:'',pickup:'',status:'',note:'',more:0,payUrl:'',qrUrl:''};
   var arr=Array.isArray(j)?j:null;
-  if(!arr&&j&&typeof j==='object'){
-    var cand=pick(j,['items','list','menu','menus','products','goods','drinks','orders','stores','shops','data','result','results','列表','结果']);
-    if(Array.isArray(cand))arr=cand;
-    var cs=pick(j,['coupons','coupon','vouchers','优惠券']);
-    if(cs!==undefined){if(!Array.isArray(cs))cs=[cs];cs.slice(0,4).forEach(function(c){
-      if(typeof c==='string'){out.coupons.push({n:c,v:'',e:''});return}
-      if(c&&typeof c==='object'){var cn=pick(c,['name','title','couponName','名称'])||'优惠券';var cv=pick(c,['discount','amount','value','off','面额','折扣']);var ce=pick(c,['expire','expireAt','validTo','deadline','有效期']);
-        out.coupons.push({n:String(cn),v:cv!==undefined?String(cv):'',e:ce!==undefined?String(ce).slice(0,20):''})}})}
-    var tt=pick(j,['total','totalPrice','totalAmount','payAmount','realPay','合计','总价','应付']);if(tt!==undefined)out.total=String(tt);
-    var on=pick(j,['orderNo','orderId','order_id','orderNum','单号','订单号']);if(on!==undefined)out.orderNo=String(on);
-    var pc=pick(j,['pickupCode','pickup_code','takeCode','takeNo','mealCode','取餐码','取单号']);if(pc!==undefined)out.pickup=String(pc);
-    var stx=pick(j,['status','state','orderStatus','状态']);if(stx!==undefined)out.status=String(stx);
-    var msg=pick(j,['message','msg','tip','note','说明','提示']);if(typeof msg==='string')out.note=msg.slice(0,80);
-  }
+  if(!arr){for(var li=lvls.length-1;li>=0&&!arr;li--){var cand=pick(lvls[li],['items','list','menu','menus','products','goods','drinks','orders','stores','shops','orderProductList','productList','列表','结果']);if(Array.isArray(cand))arr=cand}}
+  var host=lvls.length?lvls[lvls.length-1]:null;
+  var cs=pickL(['coupons','coupon','vouchers','couponList','优惠券']);
+  if(cs!==undefined){if(!Array.isArray(cs))cs=[cs];cs.slice(0,4).forEach(function(c){
+    if(typeof c==='string'){out.coupons.push({n:c,v:'',e:''});return}
+    if(c&&typeof c==='object'){var cn=pick(c,['name','title','couponName','名称'])||'优惠券';var cv=pick(c,['discount','amount','value','off','面额','折扣']);var ce=pick(c,['expire','expireAt','validTo','deadline','有效期']);
+      out.coupons.push({n:String(cn),v:cv!==undefined?String(cv):'',e:ce!==undefined?String(ce).slice(0,20):''})}})}
+  var tt=pickL(['total','totalPrice','totalAmount','payAmount','realPay','realTotalAmount','realPayAmount','合计','总价','应付']);if(tt===undefined)tt=deepFind(j,/^(totalAmount|realTotalAmount|realPayAmount|payAmount|totalPrice)$/i);if(tt!=null)out.total=String(tt);
+  var on=pickL(['orderNo','orderId','order_id','orderNum','单号','订单号']);if(on===undefined)on=deepFind(j,/^(orderId|orderNo|orderNum|order_id)$/i);if(on!=null)out.orderNo=String(on);
+  var pc=pickL(['pickupCode','pickup_code','takeCode','takeNo','mealCode','pickUpCode','取餐码','取单号']);if(pc===undefined)pc=deepFind(j,/^(pickupCode|pickUpCode|takeCode|mealCode|takeNo)$/i);if(pc!=null)out.pickup=String(pc);
+  var stx=pickL(['status','state','orderStatus','orderStatusName','状态']);if(stx===undefined)stx=deepFind(j,/^(orderStatusName|orderStatus|statusName|orderState)$/i);if(stx!=null)out.status=String(stx);/* v147-p：#4 状态/合计埋在 orderDetail 等更深层时深搜兜底 */
+  var msg=pickL(['message','msg','tip','note','说明','提示']);if(typeof msg==='string')out.note=msg.slice(0,80);
+  var pu=pickL(['payH5Url','payUrl','payLink','payOrderUrl','h5PayUrl','payPageUrl','paymentUrl','cashierUrl','payMiniUrl','支付链接']);/* v147-p：#4 支付字段——链接与二维码分开认 */
+  if(pu===undefined)pu=deepFind(j,/pay.*(url|link)|cashier.*url/i,function(v,k){return /^https?:\/\//i.test(v)&&!/qr/i.test(k)});
+  if(typeof pu==='string'&&/^https?:\/\//i.test(pu))out.payUrl=pu;
+  var qu=pickL(['payOrderQrCodeUrl','payQrCodeUrl','qrCodeUrl','qrcodeUrl','payQrCode','qrCode','二维码']);
+  if(qu===undefined)qu=deepFind(j,/qr.?code/i,function(v){return /^https?:\/\//i.test(v)});
+  if(typeof qu==='string'&&/^https?:\/\//i.test(qu))out.qrUrl=qu;
   if(arr){arr.slice(0,6).forEach(function(it){var r=itemRow(it);if(r)out.rows.push(r)});if(arr.length>6)out.more=arr.length-6}
-  if(!out.rows.length&&j&&typeof j==='object'&&!Array.isArray(j)){
-    var ks=Object.keys(j);
-    for(var i2=0;i2<ks.length&&out.kv.length<6;i2++){var v2=j[ks[i2]];
-      if(v2===null||typeof v2==='object')continue;
+  if(!out.rows.length&&host){
+    var _skip9={data:1,result:1,results:1,success:1,code:1,message:1,msg:1,traceId:1,requestId:1};
+    var ks=Object.keys(host);
+    for(var i2=0;i2<ks.length&&out.kv.length<6;i2++){var v2=host[ks[i2]];
+      if(_skip9[ks[i2]]||v2===null||typeof v2==='object')continue;
       out.kv.push({k:ks[i2],v:String(v2).slice(0,48)})}
   }
-  if(!out.rows.length&&!out.kv.length&&!out.coupons.length&&!out.total&&!out.orderNo&&!out.pickup&&!out.status)return null;
+  if(!out.rows.length&&!out.kv.length&&!out.coupons.length&&!out.total&&!out.orderNo&&!out.pickup&&!out.status&&!out.payUrl&&!out.qrUrl)return null;
   return out}
 function _mcpBrandCard(b,op,res){/* 品牌主题卡全套：待确认 / 执行中 / 成功（结构化）/ 失败；点卡展开原始回传与参数 */
   var B=MCP_BRANDS[b];
@@ -6793,7 +6842,7 @@ function _mcpBrandCard(b,op,res){/* 品牌主题卡全套：待确认 / 执行�
   }catch(e){argsTxt=esc(String(op.args||'').slice(0,64))}
   if(pending){h+='<div class="mcpb-note">AI 想调用「'+esc(B.name)+'」的这项服务，点「允许执行」才会真正发出。</div>';if(argsTxt)h+='<div class="mcpb-args">'+argsTxt+'</div>'}
   else if(running){h+='<div class="mcpb-note">正在与 '+esc(B.name)+' 服务通话…</div>'}
-  else if(fail){h+='<div class="mcpb-note bad">'+esc((raw||'调用失败').slice(0,140))+'</div>'}
+  else if(fail){h+='<div class="mcpb-note bad">'+esc(_ibCut(raw||'调用失败',200))+'</div>'}
   else if(ok){
     if(parsed){
       if(parsed.rows.length){h+='<div class="mcpb-list">';
@@ -6809,11 +6858,20 @@ function _mcpBrandCard(b,op,res){/* 品牌主题卡全套：待确认 / 执行�
         parsed.kv.forEach(function(p2){h+='<div class="mcpb-row"><span class="mn">'+esc(p2.k)+'</span><span class="mp t">'+esc(p2.v)+'</span></div>'});
         h+='</div>'}
       if(parsed.note)h+='<div class="mcpb-note">'+esc(parsed.note)+'</div>';
+      if(parsed.payUrl||parsed.qrUrl){/* v147-p：#4 支付动作行——回传里带支付链接/二维码就直接给按钮，不再让用户去官方 App 里大海捞针 */
+        h+='<div class="mcpb-payrow">'
+          +(parsed.payUrl?'<a class="mcpb-pay" href="'+esc(parsed.payUrl)+'" target="_blank" rel="noopener">去支付</a>':'')
+          +(parsed.qrUrl?'<a class="mcpb-pay alt" href="'+esc(parsed.qrUrl)+'" target="_blank" rel="noopener">支付二维码</a>':'')
+          +'<span class="mcpb-payhint">支付页由品牌方提供，请在打开的页面完成付款</span></div>';
+      }
     }else{
-      h+='<div class="mcpb-note">'+esc((raw||'已完成').slice(0,140))+'</div>';
+      h+='<div class="mcpb-note">'+esc(_ibCut(raw||'已完成',200))+'</div>';
+      var _pu9=(raw.match(/https?:\/\/[^\s"'<>）)]+/g)||[]).filter(function(u){return /pay|cashier/i.test(u)})[0]||'';
+      if(_pu9)h+='<div class="mcpb-payrow"><a class="mcpb-pay" href="'+esc(_pu9)+'" target="_blank" rel="noopener">去支付</a><span class="mcpb-payhint">从回传文本中识别到的支付链接</span></div>';/* v147-p：#4 结构化解析不动、但文本里有支付链接时也给按钮 */
     }
   }else{h+='<div class="mcpb-note">已发起（结果未回传）</div>'}
   d.innerHTML=h+(detail?'<div class="ws-op-detail">'+esc(detail)+'</div>':'');
+  try{Array.prototype.forEach.call(d.querySelectorAll('.mcpb-pay'),function(aEl){aEl.addEventListener('click',function(ev){ev.stopPropagation()})})}catch(e){}/* v147-p：#4 点支付按钮不触发卡片展开 */
   if(detail)d.addEventListener('click',function(e){e.stopPropagation();d.classList.toggle('expanded')});
   return d}
 function wsOpCard(op,res){
@@ -8616,7 +8674,7 @@ async function runToolAt(m,i,op){
   redrawMsg(m);
   let r;
   try{r=await execToolOp(op)}catch(err){r={ok:false,detail:String((err&&err.message)||err).slice(0,300)}}
-  m.wsResults[i]={type:'tool',name:op.name,args:op.args,ok:!!r.ok,response:String(r.detail||r.response||'').slice(0,1200),fed:false};
+  m.wsResults[i]={type:'tool',name:op.name,args:op.args,ok:!!r.ok,response:_ibCut(String(r.detail||r.response||''),12000),fed:false};/* v147-p：#2 1200 暴力截断退役——createOrder 的支付链接/orderDetail 常在千字之后，一刀下去支付信息全军覆没 */
   try{await dbPut('chatMessages',m)}catch(e){}
   redrawMsg(m);
   try{const _st1=_wsLoopStateM.get(m.id);
@@ -8727,11 +8785,25 @@ async function feedToolResults(hist,cfg,extra){
       if(r&&EXEC_WS[r.type]&&typeof r.ok==='boolean'&&!r.fed&&!r.pendingConfirm){
         if(r.type==='help'&&r.ok)pend.push(_wsHelpInternalM());
         else if(r.type==='read'||r.type==='search'||r.type==='ctx'||r.type==='cal_list')pend.push('- 工作区·'+((WS_META[r.type]&&WS_META[r.type][1])||r.type)+(r.path?'「'+r.path+'」':'')+'：'+(r.ok?'成功':'失败')+((r.response||r.detail||r.reason)?' · '+String(r.response||r.detail||r.reason).slice(0,1600):''));/* v88-m 任务④：检索/上下文按读取口径回传（1600）→ v90-m 拍板②：读文件同并入 1600 专道 */
-        else pend.push('- '+(r.type==='tool'?('工具「'+(r.name||'')+'」'):('工作区·'+((WS_META[r.type]&&WS_META[r.type][1])||r.type)+(r.path?'「'+r.path+'」':'')))+'：'+(r.ok?'成功':'失败')+((r.response||r.detail||r.reason)?' · '+String(r.response||r.detail||r.reason).slice(0,700):''));
+        else pend.push('- '+(r.type==='tool'?('工具「'+(r.name||'')+'」'):('工作区·'+((WS_META[r.type]&&WS_META[r.type][1])||r.type)+(r.path?'「'+r.path+'」':'')))+'：'+(r.ok?'成功':'失败')+((r.response||r.detail||r.reason)?' · '+_ibCut(String(r.response||r.detail||r.reason),12000):''));
         pendR.push(r);dirty.push(m);/* fix-m①：不再发前标 fed，送达后由 commit 统一落标 */
       }
     });
   });
+  try{/* v147-p：#5 关键结果备忘——含订单/支付字段的 MCP 结果此前 fed=true 一轮即失忆：AI 第一轮没复述支付链接、下一轮 query-order 又不带链接，就只能说「链接不在我手里」。现窗口期内把最近 2 条这类原文以备忘持续注入（fed 记账与 commit 逻辑不动） */
+    const memo9=[];
+    seenM9.forEach(mm9=>{
+      if(!mm9||mm9.role==='user'||!Array.isArray(mm9.wsResults))return;
+      if(cfg&&mm9.friendId!==cfg.id)return;
+      mm9.wsResults.forEach(r9=>{
+        if(!(r9&&r9.type==='tool'&&r9.fed&&r9.ok===true&&/^mcp\./i.test(String(r9.name||''))))return;
+        if(pendR.indexOf(r9)!==-1)return;
+        const rp9=String(r9.response||'');
+        if(/(payH5Url|payOrderUrl|payOrderQrCodeUrl|payUrl|payLink|qrCodeUrl|cashierUrl)/i.test(rp9)||(/create|submit|place|pay/i.test(String(r9.name||''))&&/(orderId|orderNo|订单号|payId)/i.test(rp9)))memo9.push('- [此前已回传的关键结果备忘·勿因此重复调用] 工具「'+(r9.name||'')+'」：'+_ibCut(rp9,4000));
+      });
+    });
+    memo9.slice(-2).forEach(x9=>pend.push(x9));
+  }catch(e){}
   try{/* v77-m：查看动态附图回注——有视觉能力的 AI 下一条消息真实收到用户配图；无视觉只见文本，不报错 */
     if(cfg&&_bxViewImgs.length){
       const mine=_bxViewImgs.filter(x=>x.fid===cfg.id);
@@ -9012,10 +9084,11 @@ async function buildToolsBlock(){
       if(sv.enabled===false)return;
       (sv.tools||[]).forEach(t=>{
         if(t.enabled===false)return;
-        const ps=t.inputSchema&&t.inputSchema.properties?Object.keys(t.inputSchema.properties).map(k=>{
-          const req=(t.inputSchema.required||[]).indexOf(k)!==-1;return k+(req?'*':'');
-        }).join(','):'';
-        list.push('- mcp.'+sv.alias+'.'+t.name+'：'+String(t.description||'').slice(0,120)+(ps?'（参数：'+ps+'）':''));
+        /* v147-p：#1 完整回传工具 schema——原先只给 AI 看 120 字描述＋裸参数名清单，类型/枚举/嵌套结构/字段说明全丢，
+           麦当劳/瑞幸这类多步下单流程（items 结构、preview→create 字段沿用）只能靠参数名瞎猜；
+           现描述放宽到 2000 字并附完整 inputSchema JSON（单工具 3000 字安全截断兜底，防个别服务器超长 schema 撑爆提示词） */
+        let sc='';try{if(t.inputSchema)sc=JSON.stringify(t.inputSchema)}catch(e){}
+        list.push('- mcp.'+sv.alias+'.'+t.name+'：'+_ibCut(String(t.description||'').replace(/\s+/g,' '),2000)+(sc?'\n  参数 schema：'+_ibCut(sc,3000):''));
       });
     });
   }
@@ -9190,13 +9263,8 @@ const IBMCP={
     const headers={'Content-Type':'application/json','Accept':'application/json, text/event-stream'};
     if(this._sess[sv.alias])headers['Mcp-Session-Id']=this._sess[sv.alias];
       if(sv.token)headers['Authorization']=(/^bearer\s/i.test(sv.token)?sv.token:'Bearer '+sv.token);/* v131 需求③：官方 MCP 鉴权 */
-    const ac=new AbortController();const tmr=setTimeout(()=>ac.abort(),method==='tools/call'?60000:20000);/* v131-p：联网搜索 / 抓网页一次常要十几秒，tools/call 放宽到 60s；握手与列工具仍 20s */
-    let res;
-    try{
-      res=await fetch(sv.url,{method:'POST',headers:headers,signal:ac.signal,
-        body:JSON.stringify({jsonrpc:'2.0',id:id,method:method,params:params||{}})});
-    }catch(err){clearTimeout(tmr);throw new Error(err&&err.name==='AbortError'?'超时':'网络错误（可能是 CORS 未放行）')}
-    clearTimeout(tmr);
+    const tmo=method==='tools/call'?60000:20000;/* v131-p：联网搜索 / 抓网页一次常要十几秒，tools/call 放宽到 60s；握手与列工具仍 20s */
+    const res=await this._post(sv,headers,{jsonrpc:'2.0',id:id,method:method,params:params||{}},tmo);/* v145-p：#3 传输层 _post——fetch / 跨域中转双级通道，超时口径与其余流程不变 */
     if((res.status===404||res.status===400)&&this._sess[sv.alias]&&!retried){
       delete this._sess[sv.alias];
       await this._init(sv);
@@ -9212,14 +9280,32 @@ const IBMCP={
     if(j.error)throw new Error(j.error.message||'服务器返回错误');
     return j.result;
   },
+/* v145-p：#3 边界整治——另一端专属的传输分支整段移出公开文件；本文件只面向浏览器环境 */
+  _proxyFor(u){var p='';try{p=String((_mp&&_mp.mcp&&_mp.mcp.proxy)||'').trim()}catch(e){}if(!p)return'';if(p.indexOf('{url}')>=0)return p.replace('{url}',encodeURIComponent(u));return p+encodeURIComponent(u)},/* v143-p：#1 跨域中转地址拼装——含 {url} 则占位替换，否则末尾拼接编码后的完整地址 */
+  async _post(sv,headers,bodyObj,tmo){/* v145-p：#3 统一传输层（浏览器版）：fetch → 网络 / CORS 失败且配了「跨域中转」时自动改走中转重试；返回 fetch Response 或同形对象（status / ok / headers.get / text） */
+    var ac=new AbortController();var tmr=setTimeout(function(){ac.abort()},tmo);
+    try{
+      var res=await fetch(sv.url,{method:'POST',headers:headers,signal:ac.signal,body:JSON.stringify(bodyObj)});
+      clearTimeout(tmr);return res;
+    }catch(err){
+      clearTimeout(tmr);
+      if(err&&err.name==='AbortError')throw new Error('超时');
+      var px=this._proxyFor(sv.url);
+      if(px){
+        var ac2=new AbortController();var tmr2=setTimeout(function(){ac2.abort()},tmo);
+        try{var res2=await fetch(px,{method:'POST',headers:headers,signal:ac2.signal,body:JSON.stringify(bodyObj)});clearTimeout(tmr2);return res2}
+        catch(e2){clearTimeout(tmr2);throw new Error(e2&&e2.name==='AbortError'?'超时（跨域中转）':'网络错误：直连与跨域中转均未通（'+String((e2&&e2.message)||e2).slice(0,80)+'）')}
+      }
+      throw new Error('网络错误（可能是 CORS 未放行）'+(/mcp\.mcd\.cn|lkcoffee\.com/i.test(String(sv.url||''))?'：麦当劳 / 瑞幸官方端点未对浏览器放行跨域，浏览器无法直连——请在 MCP 卡「跨域中转」栏填自建转发后重试（部署方法见 GUIDE → DIY）':''));/* v145-p：#3 提示词浏览器版 */
+    }
+  },
   async _init(sv){
     await this._rpc(sv,'initialize',{protocolVersion:this.PROTO,capabilities:{},clientInfo:{name:'InternalBeyond-Mobile',version:'2'}});
     try{
       const headers={'Content-Type':'application/json'};
       if(this._sess[sv.alias])headers['Mcp-Session-Id']=this._sess[sv.alias];
       if(sv.token)headers['Authorization']=(/^bearer\s/i.test(sv.token)?sv.token:'Bearer '+sv.token);/* v131 需求③：官方 MCP 鉴权 */
-      await fetch(sv.url,{method:'POST',headers:headers,
-        body:JSON.stringify({jsonrpc:'2.0',method:'notifications/initialized'})});
+      await this._post(sv,headers,{jsonrpc:'2.0',method:'notifications/initialized'},15000);/* v143-p：#1 通知同走统一传输层 */
     }catch(e){}
   },
   async connect(sv){
@@ -9230,7 +9316,7 @@ const IBMCP={
       const r=await this._rpc(sv,'tools/list',cursor?{cursor:cursor}:{});
       ((r&&r.tools)||[]).forEach(t=>{
         const old=(sv.tools||[]).find(x=>x.name===t.name);
-        tools.push({name:t.name,description:String(t.description||'').slice(0,600),inputSchema:t.inputSchema||null,enabled:old?old.enabled!==false:true});
+        tools.push({name:t.name,description:String(t.description||'').slice(0,6000)/* v147-p：#1 已连服务器需重连一次刷新落库描述 */,inputSchema:t.inputSchema||null,enabled:old?old.enabled!==false:true});
       });
       cursor=(r&&r.nextCursor)||null;page++;
     }while(cursor&&page<20&&tools.length<200);
@@ -9245,7 +9331,11 @@ const IBMCP={
       else if(b.type==='resource'&&b.resource&&b.resource.text)text+=(text?'\n':'')+b.resource.text;
       else if(b.type==='image')text+=(text?'\n':'')+'[图片返回]';
     });
-    return text.slice(0,12000);
+    try{if(result&&result.structuredContent!==undefined&&result.structuredContent!==null){/* v147-p：#3 MCP 2025-06-18 起 CallToolResult 支持 structuredContent（机器可读结构化结果）——原实现只读 content，这里的字段整个被扔掉 */
+      var sc9=typeof result.structuredContent==='string'?result.structuredContent:JSON.stringify(result.structuredContent);
+      if(sc9&&sc9!=='null'&&sc9!=='{}'&&text.indexOf(sc9)===-1)text=(text?text+'\n':'')+sc9;
+    }}catch(e){}
+    return _ibCut(text,20000);
   },
   async call(fullName,args){
     const mm=String(fullName||'').match(/^mcp\.([\w-]+)\.(.+)$/i);
@@ -10833,6 +10923,7 @@ async function renderDiyMcp(){
   await loadMP();
   sw2($('mcp-enabled'),_mp.mcp.enabled);
   sw2($('mcp-confirm'),_mp.mcp.confirm!==false);
+  try{var _px=$('mcp-proxy');if(_px)_px.value=(_mp.mcp&&_mp.mcp.proxy)||''}catch(e){}/* v143-p：#1 回填跨域中转 */
   drawMcpList();
 }
 async function renderDiyTool(){
@@ -10843,13 +10934,14 @@ async function renderDiyTool(){
 }
 $('mcp-enabled').addEventListener('click',async()=>{await loadMP();_mp.mcp.enabled=!_mp.mcp.enabled;sw2($('mcp-enabled'),_mp.mcp.enabled);await saveMP()});
 $('mcp-confirm').addEventListener('click',async()=>{await loadMP();_mp.mcp.confirm=!(_mp.mcp.confirm!==false);sw2($('mcp-confirm'),_mp.mcp.confirm!==false);await saveMP()});
+var _mpxEl=$('mcp-proxy');if(_mpxEl)_mpxEl.addEventListener('change',async()=>{await loadMP();_mp.mcp.proxy=_mpxEl.value.trim();_mpxEl.value=_mp.mcp.proxy;await saveMP();toast(_mp.mcp.proxy?'跨域中转已保存':'已清除跨域中转')});/* v143-p：#1 */
 $('ibt-enabled').addEventListener('click',async()=>{await loadIBT();_ibt.enabled=!_ibt.enabled;sw2($('ibt-enabled'),_ibt.enabled);try{await dbPut('apiSettings',_ibt)}catch(e){toast('保存失败')}});
 $('ibt-confirm').addEventListener('click',async()=>{await loadIBT();_ibt.confirm=!(_ibt.confirm!==false);sw2($('ibt-confirm'),_ibt.confirm!==false);try{await dbPut('apiSettings',_ibt)}catch(e){toast('保存失败')}});
 var MCP_PRESETS=[/* v131 需求③：官方端点已核实入档（两家均为品牌官方开放平台、Streamable HTTP + Bearer Token）；添加后即普通服务器条目，可随时删除 */
   {b:'mcd',alias:'mcdonalds',name:'麦当劳 MCP',url:'https://mcp.mcd.cn',
-   desc:'官方端点已预填（mcp.mcd.cn）。到 open.mcd.cn/mcp 手机号登录 → 控制台激活并复制 Token 填入令牌栏即可连接。查菜单、领券、积分、麦乐送 / 到店 / 得来速下单都在；Token 代表你的会员身份，注意保密。'},
+   desc:'官方端点已预填（mcp.mcd.cn）。到 open.mcd.cn/mcp 手机号登录 → 控制台激活并复制 Token 填入令牌栏即可连接。查菜单、领券、积分、麦乐送 / 到店 / 得来速下单都在；Token 代表你的会员身份，注意保密。该端点未对浏览器放行跨域，需先填上方「跨域中转」。'},
   {b:'lk',alias:'luckin',name:'瑞幸咖啡 MCP',url:'https://gwmcp.lkcoffee.com/order/user/mcp',
-   desc:'官方端点已预填（gwmcp.lkcoffee.com）。到 open.lkcoffee.com 登录领取 Token 填入令牌栏即可连接。找店、看饮品单、自动配券、下单取餐一条龙；Token 与账号绑定、约一个月有效，严禁泄露。'},
+   desc:'官方端点已预填（gwmcp.lkcoffee.com）。到 open.lkcoffee.com 登录领取 Token 填入令牌栏即可连接。找店、看饮品单、自动配券、下单取餐一条龙；Token 与账号绑定、约一个月有效，严禁泄露。该端点未对浏览器放行跨域，需先填上方「跨域中转」。'},
   /* v131-p：联网搜索——两家官方公开端点均已实测：允许浏览器跨域（CORS *）、无令牌可用、Streamable HTTP。无需令牌的预设点「添加」直接入列并自动连接 */
   {b:'pl',alias:'parallel',name:'Parallel 联网搜索',url:'https://search.parallel.ai/mcp',noToken:true,
    desc:'Parallel 官方公开端点（search.parallel.ai），无需令牌。web_search 返回已整理好的网页摘录（多数问题可直接作答），web_fetch 抓取指定网页正文。点「添加」即接入并连接，之后 AI 就能自己上网查资料。公开端点有限流，重度使用可去 parallel.ai 领 API key 填入令牌栏。'},
@@ -11447,7 +11539,7 @@ function _orientApply(){try{
   el=$('ui-bigtouch');if(el)el.addEventListener('click',async function(){var el9=this;try{await loadMP();_mp.ui=_mp.ui||{};_mp.ui.bigTouch=!_mp.ui.bigTouch;sw2(el9,!!_mp.ui.bigTouch);await saveMP();_uiApply();toast(_mp.ui.bigTouch?'触控目标已放大':'触控目标恢复标准')}catch(e){toast('设置保存失败，请重试');try{await loadMP();sw2(el9,!!(_mp.ui&&_mp.ui.bigTouch))}catch(e2){}}});
   setTimeout(function(){try{if(window.IBNative&&window.IBNative.available){var _bg=$('pres-bg');var _row=_bg&&_bg.closest('.tog');if(_row)_row.style.display=''}}catch(e){}},1200);/* v116-p：壳内显露「后台 Presence（App）」开关（桥在文末激活，故延时探测；浏览器 / PWA 保持隐藏） */
 })();
-var IB_VER='v142-p',IB_VER_DATE='2026-08-22';/* v86-m r3：版本号占位——展示于 PWA 卡、写入导出档与运行时 manifest（本轮任务 5 待办项） */
+var IB_VER='v147-p',IB_VER_DATE='2026-08-23';/* v86-m r3：版本号占位——展示于 PWA 卡、写入导出档与运行时 manifest */
 (function _appVerDraw(){var e=document.getElementById('app-ver');if(e)e.textContent='InternalBeyond Mobile '+IB_VER+'（'+IB_VER_DATE+'）'})();
 function _lkVeilOff(){try{var v=document.getElementById('lk-preveil');if(v){v.classList.add('off');setTimeout(function(){try{v.remove()}catch(e){}},420)}}catch(e){}}/* fix-r4：预遮罩揭幕（任务 8） */
 async function _lkBoot(){try{await loadBgs()}catch(e){}var lk=_lkCfg();try{localStorage.setItem('ib_lockOn',lk&&lk.on?'1':'0')}catch(e){}/* v101-m：启动后把 DB 真值回写同步镜像 */if(lk&&lk.on)_lkShow();else _lkVeilOff()}
@@ -12607,13 +12699,13 @@ async function cvcalOpen(){
   const w=$('cvcal');if(!w)return;
   const scope=_activeThread?('# '+_activeThread.name):cfgName(_activeCfg);
   $('cvcal-sub').textContent=scope+' · 统计中…';
-  w.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>w.classList.add('open')));
+  try{document.body.classList.add('cvcal-open')}catch(e){}/* v146-p：#2 */w.hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>w.classList.add('open')));
   await _cvcalBuild();
   const n=new Date();_cvcalY=n.getFullYear();_cvcalM=n.getMonth();
   $('cvcal-sub').textContent=scope+' · 共 '+_cvcalTotal+' 条消息';
   cvcalDraw();
 }
-function cvcalClose(){const w=$('cvcal');if(!w||w.hidden)return;w.classList.remove('open');setTimeout(()=>{w.hidden=true},280)}
+function cvcalClose(){try{document.body.classList.remove('cvcal-open')}catch(e){}/* v146-p：#2 先摘类再判空，任何路径关闭都不残留 */const w=$('cvcal');if(!w||w.hidden)return;w.classList.remove('open');setTimeout(()=>{w.hidden=true},280)}
 function cvcalDraw(){
   const g=$('cvcal-grid');if(!g)return;
   $('cvcal-ym').textContent=_cvcalY+' 年 '+(_cvcalM+1)+' 月 ▾';
@@ -16117,6 +16209,7 @@ body:not(.theme-infernal) .cs-item .cs-cn{color:#16233c;font-weight:500}/* v69-m
 body.on-conv #chat-side-btn{display:flex}
 body.on-conv #blog-side-btn{display:none}
 body.on-sub .theme-drop,body.on-sub #blog-side-btn,body.on-sub #chat-side-btn{display:none}
+body.cvcal-open .theme-drop,body.cvcal-open #chat-side-btn{display:none}/* v146-p：#2 「按日期查看」重叠根修——主题浮球与会话双滑杆钮是 z38 的 body 级 fixed，而 #cvcal(z45) 关在 #conv(z35) 的堆叠上下文里被封顶，两枚浮球必然盖在日历右上角「今天」一带；打开日历期间照 on-sub 同款收起 */
 .cs-item{display:flex;align-items:center;gap:10px}
 .cs-i{width:18px;height:18px;flex:none;display:flex}
 .cs-i svg{width:100%;height:100%;fill:none;stroke:var(--acc);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
@@ -16937,7 +17030,7 @@ body.vzh-ios .sb-hero .sbh-top{flex-direction:column;align-items:center;gap:4px}
 body.vzh-ios .sb-hero .sbh-main{display:flex;flex-direction:column;align-items:center}
 body.vzh-ios .sb-hero .sbh-duo{order:-1;width:100%;min-height:0;margin:0 0 2px;padding:0;justify-content:center}/* v99-m 任务4：①头像移到时刻上方——用 order 而不是改 DOM 顺序，默认玻璃款的左右版式零影响；②「部分浏览器里不居中」的真凶是基类 .sbh-duo 残留的 padding:6px 10px 0 0，旧的 iOS 覆盖只改了 justify-content 没清 padding，于是恒定左偏 5px */
 body.vzh-ios .sb-hero .sbh-duo .duo{margin:0 auto}
-body.vzh-ios .sb-hero .sbh-top{margin-top:17px;gap:2px}/* v99-m 任务4：AUGUST 16 日期行与时刻拉开距离 */
+body.vzh-ios .sb-hero .sbh-top{margin-top:6px;gap:2px}/* v143-p：#4 日期与时刻拉近 *//* v99-m 任务4：AUGUST 16 日期行与时刻拉开距离 */
 body.vzh-ios .sb-hero .tp-time{margin-top:0}
 /* 锁屏图案盘 · iOS 质感（任务 2）：面板改毛玻璃厚板＋落影，节点投影由画布内阴影补 */
 #lockscr .lk-padpanel{background:rgba(28,32,42,0.32)!important;-webkit-backdrop-filter:blur(28px) saturate(1.2)!important;backdrop-filter:blur(28px) saturate(1.2)!important;border:1px solid rgba(255,255,255,0.2)!important;border-radius:28px!important;box-shadow:0 22px 60px rgba(0,0,0,0.42),inset 0 1px 0 rgba(255,255,255,0.24)!important}
@@ -17071,28 +17164,34 @@ body.theme-infernal .ma-btn svg{filter:drop-shadow(0 1px 0 rgba(255,255,255,0.16
 .ca-hm{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 30px}
 .ca-duo{position:relative;flex:none;width:236px;height:74px;margin:0 auto 11px}/* v142-p：#2 固定 236×74 轨道盘——任何机型都放得下，≤380 不再缩头像 */
 .ca-duo .ca-ava{position:absolute;top:4px}.ca-duo .ca-ava.me{left:4px}.ca-duo .ca-ava.ai{right:4px}
-.ca-ava{position:relative;flex:none;width:66px;height:66px;border-radius:50%;background:var(--soft);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:1.5rem;font-weight:400;color:var(--tx2);box-shadow:0 0 0 2.5px var(--panel),0 0 0 4px color-mix(in srgb,var(--acc) 40%,transparent),0 10px 22px rgba(42,72,112,.14)}
+.ca-ava{position:relative;flex:none;width:66px;height:66px;border-radius:50%;background:var(--soft);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:1.5rem;font-weight:400;color:var(--tx2);box-shadow:0 0 0 1px rgba(255,255,255,.62),0 0 0 4.5px rgba(150,172,204,.12),0 0 0 5.5px rgba(150,172,204,.22),0 9px 20px rgba(52,72,102,.11),inset 0 1px 1px rgba(255,255,255,.35)}/* v145-p：#2 头像玻璃带撤 var(--acc) 着色——中性磨砂灰（与新轨道同族），头像框不再泛蓝 *//* v143-p：#2 实心双环撤下——1px 发丝线＋4.5px 透明玻璃带＋外缘细边，透出背景 */
 .ca-ava.site{background-color:#fff}
+body.theme-infernal .ca-ava{box-shadow:0 0 0 1px rgba(228,234,241,.28),0 0 0 4.5px rgba(203,211,221,.08),0 0 0 5.5px rgba(216,223,232,.15),0 10px 22px rgba(0,0,0,.42),inset 0 1px 1px rgba(255,255,255,.13)}/* v145-p：#2 暗色玻璃带同步去蓝——银灰替代蓝白 *//* v143-p：#2 暗色同款玻璃环 */
 /* v141-p：#1 头像连线改「一笔画爱心」——单色低饱和蓝、一条连续线（左尾 → 底部交叉上行右叶 → 顶部凹口 → 左叶 → 底部交叉 → 右尾）；流光＝同路径的高亮短段沿线滑过（pathLength 归一 + dashoffset）；线尾伸入头像环下，头像压在线上；减少动效时流光隐藏 */
-.ca-duo{--caL:#7596c2;--caG:#dcebff;--caGs:rgba(110,156,214,.6)}
-body.theme-infernal .ca-duo{--caL:#8db0d8;--caG:#eef5ff;--caGs:rgba(190,220,255,.7)}
+.ca-duo{--caL:#a9bcd6;--caG:#7f99ba;--caGs:rgba(127,153,186,.3);--caHi:#fff;--caHaloO:.16;--caTubeO:.4;--caBaseO:.85;--caLiqO:.3;--caTailO:.38;--caHeadO:.85;--caGlintO:.8}/* v146-p：#1 明亮态回暖「晨雾蓝」——上一版石墨蓝灰在白卡上偏暗发怪（用户截图对照旧版），改回界面同族的浅蓝：主线 #a9bcd6、液体 #7f99ba（饱和 ~29%、明度 ~61%，既不艳也不沉），主线不透明度回 .85 让线像旧版一样清晰可读；暗色态用户已认可，一行不动 *//* v145-p：#2 低饱和重制「月光水银」——主线/外晕降为雾岩灰蓝（HSL 饱和 ~10%），液体改石墨蓝灰（~15%），各层不透明度与晕整体收敛，白色高光 l-glint 提为主角（.9）：层次靠明度差与玻璃高光，不靠色彩浓度；上一版 #4a86d4/#6f92c6（饱和 ~60%/40%）过艳，退役 *//* v144-p：#2 明亮态流光隐形的根因——液团/拖尾/亮头共用近白 --caG:#dcebff，压在白卡面上等于没有；改「深色液体（--caG）＋白色玻璃壁高光（--caHi）」，层次由明暗差撑起 */
+body.theme-infernal .ca-duo{--caL:#aab5c2;--caG:#e9eef4;--caGs:rgba(224,231,239,.4);--caHi:#fff;--caHaloO:.09;--caTubeO:.15;--caBaseO:.68;--caLiqO:.15;--caTailO:.26;--caHeadO:.92;--caGlintO:.42}/* v145-p：#2 暗色同套去饱和——蓝调 #8db0d8/#eef5ff 换银灰 #aab5c2/#e9eef4（月光而非霓虹），晕与液体同步收敛 *//* v144-p：#2 暗色沿用 v143-p 观感数值，一行不动 */
 .ca-duo .ca-ava{z-index:1}
 .ca-orbit{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;display:block}/* v142-p：#2 轨道盘双层 SVG */
 .ca-orbit.under{z-index:0}.ca-orbit.over{z-index:2}
 .ca-orbit path{fill:none;stroke-linecap:round;stroke-linejoin:round}
-.ca-orbit .l-halo{stroke:var(--caL);stroke-width:5.5;opacity:.16}/* 主线同色浅晕，2px 主笔更显精致 */
-.ca-orbit .l-base{stroke:var(--caL);stroke-width:2}
-.ca-orbit .l-flow{stroke:var(--caG);stroke-width:2.4;stroke-dasharray:4.5 95.5;stroke-dashoffset:100;filter:drop-shadow(0 0 3.5px var(--caGs));animation:caFlow 8.4s linear infinite}/* 彗星亮头 */
-.ca-orbit .l-flow2{stroke:var(--caG);stroke-width:2.2;stroke-dasharray:11 89;stroke-dashoffset:102.6;opacity:.36;filter:blur(1.6px);animation:caFlowT 8.4s linear infinite}/* 彗尾滞后 2.6/100 相位 */
+.ca-orbit .l-halo{stroke:var(--caL);stroke-width:7;opacity:var(--caHaloO)}/* v144-p：#2 不透明度改按主题分流 *//* v143-p：#2 玻璃管外壁——更宽更透 */
+.ca-orbit .l-tube{stroke:var(--caHi);stroke-width:4.2;opacity:var(--caTubeO)}/* v144-p：#2 明亮态提到 .5，白底上才显得出管壁厚度 *//* v143-p：#2 管内高光，双壁夹出玻璃厚度 */
+.ca-orbit .l-base{stroke:var(--caL);stroke-width:1.8;opacity:var(--caBaseO)}/* v144-p：#2 同上分流 */
+.ca-orbit .l-liq{stroke:var(--caG);stroke-width:5;stroke-dasharray:24 76;stroke-dashoffset:105;opacity:var(--caLiqO);filter:blur(2.8px);animation:caFlowL 8.4s linear infinite}/* v143-p：#2 液团——宽体重模糊，玻璃里滑动的水 */
+.ca-orbit .l-flow{stroke:var(--caG);stroke-width:2.8;stroke-dasharray:5 95;stroke-dashoffset:100;opacity:var(--caHeadO);filter:drop-shadow(0 0 3.5px var(--caGs));animation:caFlow 8.4s linear infinite}/* 彗星亮头 */
+.ca-orbit .l-flow2{stroke:var(--caG);stroke-width:2.4;stroke-dasharray:13 87;stroke-dashoffset:102.6;opacity:var(--caTailO);filter:blur(1.5px);animation:caFlowT 8.4s linear infinite}/* 彗尾滞后 2.6/100 相位 */
+.ca-orbit .l-glint{stroke:var(--caHi);stroke-width:1.2;stroke-dasharray:3 97;stroke-dashoffset:99.2;opacity:var(--caGlintO);animation:caFlowG 8.4s linear infinite}/* v144-p：#2 贴着亮头跑的白色高光短段（领先 0.8/100 相位）——明亮态靠它读出玻璃管里的水，而不是一截深色划痕 */
 @keyframes caFlow{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
 @keyframes caFlowT{from{stroke-dashoffset:102.6}to{stroke-dashoffset:2.6}}
-@media (prefers-reduced-motion:reduce){.ca-orbit .l-flow,.ca-orbit .l-flow2{display:none}}/* v142-p：#2 减少动效时双层流光隐藏（口径不变） */
+@keyframes caFlowL{from{stroke-dashoffset:105}to{stroke-dashoffset:5}}
+@keyframes caFlowG{from{stroke-dashoffset:99.2}to{stroke-dashoffset:-0.8}}/* v144-p：#2 高光短段与亮头同速同轨 */
+@media (prefers-reduced-motion:reduce){.ca-orbit .l-flow,.ca-orbit .l-flow2,.ca-orbit .l-liq,.ca-orbit .l-glint{display:none}}/* v144-p：#2 四层流光隐藏（口径不变） */
 .ca-names{display:flex;align-items:baseline;justify-content:center;gap:8px;width:100%;max-width:100%;font-family:var(--disp);font-size:1.2rem;font-weight:500;color:var(--tx);letter-spacing:.02em;line-height:1.2}
 .ca-names span{flex:0 0 auto;white-space:nowrap;word-break:keep-all}/* v141-p：#2 不截断、不省略——宽度由 _caFitNames 缩字号解决 */
 .ca-names.wrap{flex-wrap:wrap;row-gap:2px}.ca-names.wrap span{flex:0 1 auto;max-width:100%;white-space:normal;word-break:break-all}/* 缩到下限仍放不下才折行 */
 .ca-names i{font-family:'Cormorant Garamond',var(--disp);font-style:italic;font-weight:400;color:var(--acc);font-size:1.06em;opacity:.92;position:relative;top:-1px}/* v142-p：#2 「&」改衬线斜体 */
 .ca-names span.n-lat{font-family:'Cormorant Garamond',var(--disp);font-weight:600;font-size:1.16em;letter-spacing:.015em}/* v142-p：#2 西文名走站内已内嵌的衬线（零新增载荷），字重字号与中文视觉配平 */
-.ca-names span.n-cjk{font-weight:600;letter-spacing:.14em;margin-right:-.14em}/* v142-p：#2 中文名疏排提气质；负 margin 吃掉末字符 tracking */
+.ca-names span.n-cjk{font-weight:600;letter-spacing:.035em;margin-right:-.035em}/* v143-p：#2 0.14em 疏排字距过大，收回 0.035em（负 margin 同步吃掉末字符 tracking） */
 .ca-en{margin-top:6px;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--tx3);white-space:nowrap}
 .ca-en b{font-weight:600;color:var(--acc);font-size:.74rem;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 .ca-anni{margin-top:11px;max-width:100%;font-size:.8rem;font-weight:600;color:var(--tx);line-height:1.35;white-space:normal;overflow-wrap:anywhere}/* v141-p：#2 长名字折行不截断 */
@@ -17100,8 +17199,13 @@ body.theme-infernal .ca-duo{--caL:#8db0d8;--caG:#eef5ff;--caGs:rgba(190,220,255,
 .ca-meta2 em{font-style:normal;color:var(--tx2);padding:2.5px 9px;border-radius:99px;background:var(--soft);border:1px solid var(--glass-line);white-space:nowrap}
 .ca-meta2 em b{font-family:var(--disp);font-weight:500;color:var(--acc);font-size:.8rem;font-variant-numeric:tabular-nums;margin:0 1px}
 .ca-meta2 em.today{color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,transparent)}
-.ca-hbar{position:relative;width:min(100%,220px);height:3px;border-radius:99px;background:var(--soft);margin-top:11px;overflow:hidden}
-.ca-hbar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--acc),color-mix(in srgb,var(--acc) 72%,white));box-shadow:0 0 8px rgba(114,168,216,.16)}
+.ca-hbar{position:relative;width:min(100%,220px);height:6px;border-radius:99px;margin-top:12px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.30),rgba(255,255,255,.04) 55%),color-mix(in srgb,var(--tx3) 16%,transparent);border:1px solid rgba(255,255,255,.42);box-shadow:inset 0 1px 2px rgba(30,52,92,.16),inset 0 -1px 1px rgba(255,255,255,.30),0 1px 0 rgba(255,255,255,.35)}/* v143-p：#2 液态玻璃槽——透明凹槽＋上下沿高光＋发丝描边 */
+body.theme-infernal .ca-hbar{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 55%),rgba(10,18,34,.42);border-color:rgba(190,214,246,.20);box-shadow:inset 0 1px 2px rgba(0,0,0,.42),inset 0 -1px 1px rgba(255,255,255,.08),0 1px 0 rgba(255,255,255,.05)}
+.ca-hbar i{position:relative;display:block;height:100%;border-radius:inherit;overflow:hidden;background:linear-gradient(180deg,#c8d5e6,#a4b8d2 58%,#8ba3c2);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -1px 1px rgba(46,62,88,.22)}/* v146-p：#1 液柱随「晨雾蓝」同族回暖 *//* v145-p：#2 液柱撤强调色渐变与外发光——石墨灰蓝渐变（与轨道同族），层次靠内高光 */
+body.theme-infernal .ca-hbar i{background:linear-gradient(180deg,#e0e6ed,#b8c3d0 58%,#9ba9ba);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 1px rgba(18,28,44,.35)}/* v145-p：#2 暗色液柱银灰款 *//* 渐变液柱＋内高光＝管内液体 */
+.ca-hbar i:after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,.55) 45%,rgba(255,255,255,.12) 55%,transparent 75%);background-size:220% 100%;animation:caBarSheen 3.6s ease-in-out infinite;mix-blend-mode:screen}/* 周期斜向流光 */
+@keyframes caBarSheen{0%{background-position:130% 0}55%,100%{background-position:-90% 0}}
+@media (prefers-reduced-motion:reduce){.ca-hbar i:after{animation:none;opacity:0}}
 @media (max-width:380px){.ca-names{font-size:1.1rem}.ca-hm{padding:0 26px}.ca-anni{font-size:.76rem}}/* v142-p：#2 轨道盘定尺 236px，小屏不再缩头像与连线 */
 /* v95-m PS：Desk 日程区与日历 App 头部字防竖排——标题/日期单行省略，容器可收缩但绝不逐字换行 */
 .ag-tt h4{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -17822,8 +17926,8 @@ var _oldProcIbOpsM=procIbOps;procIbOps=async function(cfg,m){var raw=String(m&&m
   /* v141-p：#1 头像连线——一笔画爱心路径（viewBox 120×60，两端在头像中心高度）；底层单色线 + 同路径高亮流光段 */
   var _CA_HEART_D='M73.2 37C89.63 37 103.07 54.16 118 47.92C126.96 44.02 137.41 37 137.41 27.64C137.41 22.02 133.08 17.5 127.71 17.5C122.33 17.5 118 22.02 118 27.64C118 22.02 113.67 17.5 108.29 17.5C102.92 17.5 98.59 22.02 98.59 27.64C98.59 37 109.04 44.02 118 47.92C132.93 54.16 146.37 37 162.8 37';/* v142-p：#2 爱心主线（236×74 轨道盘坐标；起止点即左右头像环 3/9 点切点，环心 (37,37)/(199,37)） */
   var _CA_ORBIT_D='M73.2 37A36.2 36.2 0 1 1 0.8 37A36.2 36.2 0 1 1 73.2 37C89.63 37 103.07 54.16 118 47.92C126.96 44.02 137.41 37 137.41 27.64C137.41 22.02 133.08 17.5 127.71 17.5C122.33 17.5 118 22.02 118 27.64C118 22.02 113.67 17.5 108.29 17.5C102.92 17.5 98.59 22.02 98.59 27.64C98.59 37 109.04 44.02 118 47.92C132.93 54.16 146.37 37 162.8 37A36.2 36.2 0 1 1 235.2 37A36.2 36.2 0 1 1 162.8 37C146.37 37 132.93 54.16 118 47.92C109.04 44.02 98.59 37 98.59 27.64C98.59 22.02 102.92 17.5 108.29 17.5C113.67 17.5 118 22.02 118 27.64C118 22.02 122.33 17.5 127.71 17.5C133.08 17.5 137.41 22.02 137.41 27.64C137.41 37 126.96 44.02 118 47.92C103.07 54.16 89.63 37 73.2 37Z';/* v142-p：#2 流光闭合轨道：左环整圈 → 爱心 → 右环整圈 → 爱心折返；环 r=36.2 正落在头像强调色描边带上 */
-  var _CA_UNDER_SVG='<svg class="ca-orbit under" viewBox="0 0 236 74" aria-hidden="true"><path class="l-halo" d="'+_CA_HEART_D+'"/><path class="l-base" d="'+_CA_HEART_D+'"/></svg>';
-  var _CA_OVER_SVG='<svg class="ca-orbit over" viewBox="0 0 236 74" aria-hidden="true"><path class="l-flow2" d="'+_CA_ORBIT_D+'" pathLength="100"/><path class="l-flow" d="'+_CA_ORBIT_D+'" pathLength="100"/></svg>';
+  var _CA_UNDER_SVG='<svg class="ca-orbit under" viewBox="0 0 236 74" aria-hidden="true"><path class="l-halo" d="'+_CA_HEART_D+'"/><path class="l-tube" d="'+_CA_HEART_D+'"/><path class="l-base" d="'+_CA_HEART_D+'"/></svg>';/* v143-p：#2 玻璃管三层 */
+  var _CA_OVER_SVG='<svg class="ca-orbit over" viewBox="0 0 236 74" aria-hidden="true"><path class="l-liq" d="'+_CA_ORBIT_D+'" pathLength="100"/><path class="l-flow2" d="'+_CA_ORBIT_D+'" pathLength="100"/><path class="l-flow" d="'+_CA_ORBIT_D+'" pathLength="100"/><path class="l-glint" d="'+_CA_ORBIT_D+'" pathLength="100"/></svg>';/* v144-p：#2 增白色高光短段 l-glint（最上层） *//* v143-p：#2 液团 / 拖尾 / 亮头三层同轨同速 */
   function _caNameCls(s){return /[\u3040-\u30ff\u3400-\u9fff\uF900-\uFAFF\uAC00-\uD7AF]/.test(String(s||''))?'n-cjk':'n-lat'}/* v142-p：#2 名字按字符集配对排印（中西混排 CP 化） */
   var _caBound=false,_caHeroIdx=0,_caHeros=[];
   async function _caEarliest(fid){var mn=0;try{var ms=await dbGetByIndex('chatMessages','byFriend',fid);(ms||[]).forEach(function(m){var x=m.timestamp||m.ts||0;if(x&&(!mn||x<mn))mn=x})}catch(e){}return mn}

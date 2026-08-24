@@ -2,7 +2,10 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<!-- InternalBeyond Mobile v146-p · 晨雾蓝与日历重叠修缮轮（相遇卡明亮态回暖 / 按日期日历浮球重叠根修） -->
+<!-- InternalBeyond Mobile v150-p · 手感与兜底修缮轮（生成记忆上限交还顶格通道 / API 卡拖拽手感重做 / 导航 API 图标查重换款） -->
+<!-- v150-p 修订单（三项）：①生成记忆输出上限兜底——撤掉单独的小上限（前版 1024），交还 callAI 的「服务商顶格＋超限自动降档」通道，与聊天正文同一套兜底（DeepSeek/Gemini 65536、Anthropic 64000、OpenAI 系 32768…，服务端嫌大自动取建议值或减半重试）；思考型模型的隐藏思考与正文共用这份预算，小上限被思考吃光就会空返回/截断——历史上「返回内容不是 JSON」的帮凶之一，桌面端稳是因为它一直走顶格通道，现在同一口径。②API 卡拖拽排序手感重做——旧版病根：长按计时期内任何一像素位移都取消计时，手指按下天然微颤、十次九次点不着；拖起后页面滚动照跑、卡片纹丝不动只有指示线。现按下给 10px 容差（超过才视为滚动意图放行）、拖起瞬间冻结页面滚动（松手即撤）、卡片跟手抬起（位移＋轻放大投影，落点仍按目标卡上下沿指示线）、指尖近屏幕上下边缘自动滚屏（长列表一次拖到底）；落位、入库、提示与旧版一致，长按时长 280→260ms。③导航区 API 图标查重换款——原图标与 Circle 社交圈为完全同款双人剪影（撞图标实锤），换为插头款；随手查重：Desk 桌面图标内部无重样，抽屉 Guide 与桌面「日志」共用一款书本图标（本轮未动）。④版本联动 v150-p。本轮其余条目属另一端专属模块，-p 线无涉。 -->
+<!-- v149-p 修订单（两项）：①语音消息声学语气分析（向电脑端对齐并升级）——移植电脑端 _vmToneAnalyze / _vmDecode：按住语音条说完、转写之后，浏览器本地对这段录音做确定性声学分析（零联网）——情绪倾向（声学×文字两路融合）、声线/变化（轻柔有力·尾音起伏·渐强渐弱·颤动）、语速（字/秒）、音量、停顿、基频 Hz、语调起伏，产出一句短描述定格存 voice.tone；发给 API 的等效文本升格为「[语音消息 N秒｜声学语气参考: …] 文字稿」（与电脑端 _voiceApiLine 同格式；聊天模型收不到原声，语气段恒附），界面不显示、不改旧消息文本、升级零缓存重建，解码或分析失败静默跳过照常发送。在电脑端分析器之上追加三项升级：音色明暗（一阶差分能量比≈谱倾斜，仅明显偏亮/偏沉时报）、发声清晰度（基频可判帧占比——清晰 vs 带气声含混）、音区偏低/偏高标注（与「基频约xxHz」并列，便于模型直读）。②生成记忆双根修（Chat / Letters / Blog 共用核心 _ibGenMemCore，参考电脑端 _generateMemoryCore / parseMemoryFields 移植）——旧 JSON 协议两处硬伤（用户截图实锤）：(a)弱模型复述指令或围栏包裹 →「返回内容不是 JSON」直接失败、记忆写不进库；(b)Chat 路的视角提示写成「从{用户名}的视角」，生成物以用户第一人称落在 AI 名下——User 与 char 混淆的直接根子。现协议改电脑端同款「字段：值」文本＋按标签位置切分（跨行字段完整捕获），解析不齐时宽容降级（标题回落、内容回落原文前 300 字），只有空返回才报错；任务提示与电脑端逐字同源——以 AI 视角写、「用名字称呼双方，不要用代词」，并随行注入人设背景与关系设定；补齐「是否已解决 / 可见性」两字段（「私密」→ visibility:private）；maxTokens 700→1024；成败文案对齐电脑端。配套范围兜底：Save Memory 默认路取「该 AI 上下文条数」与 50 的较小者（上下文设 10 就只取 10；群聊按 grpLimit），封档线之前的消息一律不参与；选择模式同受封档约束（选中含封档前消息即阻止并提示，与电脑端同界；频道无封档概念不受限）；转写稿顶上语音消息的空 content（原式恒为空行，旧逻辑 BUG）；超 4000 字预算丢最旧保最近。③版本联动 v149-p。本轮其余条目属另一端专属模块，-p 线无涉。 -->
+<!-- v148-p 修订单（两项）：①话题频道串窗根修——loadEarlier 往上翻调 dbPageByFriend 漏传 threadId 第四参，频道里翻页拉回来的全是主线消息（「聊久了显示不全＋往上翻看到主线」的直接根子）；且翻页在途无窗口守卫，切窗瞬间旧请求把上一窗的 50 条灌进新窗（「一开频道就看到主线消息」的通路）：现补传 threadId、捕获 _convSeq 在途作废、加防重入。②麦当劳品牌卡「去支付」文字改浅黄 #FFE7A8（用户定色）。③版本联动 v148-p。 -->
 <!-- v147-p 修订单（MCP 下单链专修；本轮其余条目属另一端专属模块，-p 线无涉）：①工具 schema 完整回传——buildToolsBlock 原先只给 AI 看 120 字描述＋裸参数名，类型/枚举/嵌套/字段说明全丢，麦当劳/瑞幸这类多步下单流程只能靠参数名瞎猜；现描述放宽至 2000 字并附完整 inputSchema JSON（单工具 3000 字安全截断兜底），connect 落库 description 上限 600→6000（已连服务器需在 MCP 卡重连一次刷新）。②截断链整治——工具结果 runToolAt 1200 / 回传 700 两刀退役，统一 12000 并改 _ibCut 安全截断（不从 emoji 等代理对中间切开产生乱码、截断必明示）：createOrder 的支付链接/orderDetail 常在千字之后，此前一刀下去支付信息全军覆没——「订单号出来了就是找不到订单没法付款」的直接根子；菜单看不全同根同修。③_extract 补读 structuredContent（MCP 2025-06-18 CallToolResult 标准字段）——原实现只读 content、结构化结果整个扔掉。④品牌卡解析重写——_mcpBrandParse 支持 {success,code,data:{…}} 信封逐层下钻（≤4 层）＋全树有界深搜，新认 payH5Url/payOrderUrl/payOrderQrCodeUrl 等支付字段，卡面新增「去支付/支付二维码」按钮（点按不触发展开），说明文档混排围栏 JSON 也能捞；解析不动但文本含支付链接时同样给按钮。⑤关键结果备忘——含订单/支付字段的 MCP 结果此前 fed=true 一轮即失忆，现窗口期内把最近 2 条这类原文以备忘持续注入（fed 记账不动）。⑥AI付 复核：不走 MCP、不经截断链、_gwFeedQ 通道无 fed 失忆——无同类问题，零改动。⑦版本联动 v147-p。 -->
 <!-- v146-p 修订单：①相遇纪念卡明亮态回暖「晨雾蓝」——上一版「月光水银」的石墨蓝灰在白卡上偏暗、观感发怪（用户截图对照旧版浅蓝款）：明亮态改回界面同族浅蓝——主线/外晕 #95a1b0→#a9bcd6、液体 #5d6b7d→#7f99ba（饱和 ~29%、明度 ~61%，不艳也不沉），主线不透明度 .72→.85 恢复旧版那样清晰的一笔；头像玻璃带与进度条液柱同族换浅蓝（rgba(150,172,204,·) / #c8d5e6→#8ba3c2 渐变）。暗色态用户已认可，一字节不动。②「按日期查看」日历右上角按钮重叠根修——主题浮球 .theme-drop 与会话双滑杆钮 #chat-side-btn 是 body 级 fixed(z38)，而 #cvcal(z45) 关在 #conv(z35) 的堆叠上下文里被封顶，两枚浮球必然盖到日历头部「今天」一带；现打开日历给 body 挂 cvcal-open、按 on-sub 同款把两钮 display:none，cvcalClose 先摘类再判空、任何关闭路径不残留。③版本联动 v146-p。本轮其余条目属另一端专属模块，-p 线无涉。 -->
 <!-- InternalBeyond Mobile v145-p · 双层根修与低饱和重制轮（英雄区方框投影双层分离根修 / 相遇纪念卡低饱和「月光水银」重制 / MCP 浏览器版独立与边界整治） -->
@@ -713,7 +716,7 @@ body:not(.theme-infernal) .mcpb-pk b{color:#132a52}
 .mcpb-pay:active{transform:scale(0.97)}
 .mcpb-pay.alt{background:rgba(127,150,200,0.14);color:var(--light);box-shadow:none;border:1px solid var(--glass-line)}
 body:not(.theme-infernal) .mcpb-pay.alt{color:#132a52}
-.mcpb-mcd .mcpb-pay:not(.alt){background:linear-gradient(135deg,#DB0007,#a50006);box-shadow:0 2px 8px rgba(219,0,7,0.3)}
+.mcpb-mcd .mcpb-pay:not(.alt){color:#FFE7A8;background:linear-gradient(135deg,#DB0007,#a50006);box-shadow:0 2px 8px rgba(219,0,7,0.3)}/* v148-p：#2 用户定色 */
 .mcpb-lk .mcpb-pay:not(.alt){background:linear-gradient(135deg,#2A5CAA,#1b3f7a);box-shadow:0 2px 8px rgba(42,92,170,0.3)}
 .mcpb-payhint{font-size:0.64rem;color:var(--tx2);opacity:0.8}
 .mcpb-sum{flex:1;min-width:0;text-align:right;font-size:0.68rem;color:var(--tx3)}
@@ -2049,7 +2052,7 @@ raf=requestAnimationFrame(frame);
     <div class="dw-item" data-page="memory" style="--dh:212"><span class="dw-med"><svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H5.5A1.5 1.5 0 0 1 4 15.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H14a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h4.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></span><span class="dw-en">Memory</span><span class="dw-cn">记忆库</span></div>
     <div class="dw-item" data-page="beyond" style="--dh:212"><span class="dw-med"><svg viewBox="0 0 24 24"><circle cx="9" cy="8.4" r="3.5"/><path d="M3.6 19.6a5.4 5.4 0 0 1 10.8 0"/><path d="M15.4 5.7a3.5 3.5 0 0 1 0 5.4"/><path d="M16.6 14.4a5.4 5.4 0 0 1 3.6 5.2"/></svg></span><span class="dw-en">Circle</span><span class="dw-cn">社交圈</span></div><!-- v142-p：#4 导航区 Memory 后新增社交圈——图标沿用桌面社交圈图标，data-page=beyond 与桌面图标同一页；.dw-item 统一委托绑定与 TITLES.beyond 均已在册，零 JS 改动 -->
     <div class="dw-item" data-page="icode" style="--dh:212"><span class="dw-med"><svg viewBox="0 0 24 24"><path d="M12 3.5v8.5"/><path d="M8.5 8.5 12 12l3.5-3.5"/><path d="M4 13.5v3.9A2.6 2.6 0 0 0 6.6 20h10.8a2.6 2.6 0 0 0 2.6-2.6v-3.9"/></svg></span><span class="dw-en">ICode</span><span class="dw-cn">工作区</span></div><!-- v74-m r2：ICode 前移至 API 之前 -->
-    <div class="dw-item" data-page="api" style="--dh:212"><span class="dw-med"><svg viewBox="0 0 24 24"><circle cx="9" cy="8.4" r="3.5"/><path d="M3.6 19.6a5.4 5.4 0 0 1 10.8 0"/><path d="M15.4 5.7a3.5 3.5 0 0 1 0 5.4"/><path d="M16.6 14.4a5.4 5.4 0 0 1 3.6 5.2"/></svg></span><span class="dw-en">API</span><span class="dw-cn">接口设置</span></div>
+    <div class="dw-item" data-page="api" style="--dh:212"><span class="dw-med"><svg viewBox="0 0 24 24"><path d="M9 3.2v4.3M15 3.2v4.3"/><path d="M6.8 7.5h10.4v2.6a5.2 5.2 0 0 1-10.4 0z"/><path d="M12 15.4v2.4a2.7 2.7 0 0 1-2.7 2.7H7.4"/></svg></span><span class="dw-en">API</span><span class="dw-cn">接口设置</span></div><!-- v150-p：#3 导航区 API 换插头款——原双人剪影与 Circle 社交圈完全同款（撞图标） -->
     <div class="dw-item" data-page="diy" style="--dh:212"><span class="dw-med"><svg viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0-5.4 5L4 16.6V20h3.4l5.1-5.1a4 4 0 0 0 5-5.4l-2.6 2.6-2.4-2.4z"/></svg></span><span class="dw-en">DIY</span><span class="dw-cn">创意工坊</span></div>
   </div>
   <div class="dw-foot"><!-- v66-m t6：底部按钮 UI 升级——图标圆盘+双行文字；新增 Setting（全局视觉个性化） -->
@@ -7244,9 +7247,13 @@ function pinBottom(){try{_tmCollapseAll()}catch(e){}
 }
 async function loadEarlier(){
   if(!_activeCfg||!_more)return;
+  if(loadEarlier._busy)return;loadEarlier._busy=true;/* v148-p：#1 防重入——连滚两下并发翻页会互踩 _before */
+  const _seq0=_convSeq,_tid0=_activeThread?_activeThread.id:null;/* v148-p：#1 捕获当前窗口（好友＋频道），在途切窗一律作废 */
   const box=convEl('cv-msgs');
   let pg={items:[],nextBefore:null,more:false};
-  try{pg=await dbPageByFriend(_activeCfg.id,_before,PAGE)}catch(e){}
+  try{pg=await dbPageByFriend(_activeCfg.id,_before,PAGE,_tid0)}catch(e){}/* v148-p：#1 话题频道串窗根修——原先漏传 threadId 第四参，频道里往上翻拉回来的全是主线消息（「显示不全＋翻页见主线」的直接根子） */
+  loadEarlier._busy=false;
+  if(_seq0!==_convSeq)return;/* v148-p：#1 翻页在途切了窗（频道↔主线 / 换好友），旧结果丢弃——不再把上一窗的 50 条灌进新窗（「一开频道就看到主线消息」的通路） */
   const btn=document.getElementById('cv-more');
   if(!pg.items.length){_more=false;if(btn)btn.remove();return}
   const prevH=box.scrollHeight,prevTop=box.scrollTop;
@@ -7478,7 +7485,9 @@ function _vrecCancelUI(c){
         toast('转写中…');
         try{transcript=(await vtTranscribe(blob,(r&&r.mimeType)||mime||''))||''}catch(err){}
       }
-      await sendVoiceMsg({dataUrl:dataUrl,mime:blob.type,duration:dur,transcript:transcript});
+      var tone='';/* v149-p：#1 本地声学语气分析——细腻读出这条语音的音色/语速/语调等（与电脑端对齐并升级）；解码失败静默跳过 */
+      try{var ab9=await _vmDecode(blob);tone=_vmToneAnalyze(ab9,transcript)||''}catch(err9){}
+      await sendVoiceMsg({dataUrl:dataUrl,mime:blob.type,duration:dur,transcript:transcript,tone:tone});
     };
     _recT0=Date.now();
     _rec.start();
@@ -9768,31 +9777,72 @@ $('sum-now').addEventListener('click',async()=>{
   if(rec){$('sum-body').textContent=rec.summary;$('sum-meta').textContent='覆盖至 '+new Date(rec.coveredUpTo||0).toLocaleString('zh-CN');toast('摘要已更新')}
   else toast('未生成：消息不足或 API 不可用');
 });
-/* v136-a·v134-p：#2 记忆生成统一管线——Chat 已验证的 JSON 生成/解析/落库抽为共用核心（解析逻辑与原 saveMemoryFrom 逐字同源），Letters 接入、Blog 补上入口，字段口径对齐电脑端 _generateMemoryCore（title/oneLine/content/domain 四分类/tags/importance/valence/arousal） */
+/* v136-a·v134-p：#2 记忆生成统一管线（Chat / Letters / Blog 共用核心）。
+   v149-p：#2 协议自 JSON 改「字段：值」文本＋宽容解析——移植电脑端 _generateMemoryCore / parseMemoryFields。
+   旧 JSON 协议两处硬伤（用户截图实锤）：①弱模型复述指令或围栏包裹 →「返回内容不是 JSON」直接失败、记忆写不进库；
+   ②Chat 路的视角提示写成「从{用户名}的视角」，生成物以用户第一人称落在 AI 名下——User 与 char 混淆的直接根子。
+   现与电脑端同构：按字段标签出现位置切分（「内容」等跨多行字段完整捕获），解析不齐时按电脑端口径宽容降级
+   （标题回落 titleFallback、内容回落原文前 300 字），只有整段空返回才报错；是否已解决 / 可见性两字段随之补齐
+   （「私密」→ 本端 visibility:'private'，其余落「所有 AI 可见」）。 */
+const MEM_FIELD_KEYS_M=['标题','概括','内容','领域','标签','效价','唤醒度','重要性','是否已解决','可见性'];
+function parseMemoryFieldsM(resp){/* 与电脑端 parseMemoryFields 逐字同源 */
+  const out={};
+  if(!resp)return out;
+  const hits=[];
+  MEM_FIELD_KEYS_M.forEach(k=>{
+    const re=new RegExp('(^|\\n)\\s*'+k+'\\s*[：:]');
+    const m=re.exec(resp);
+    if(m)hits.push({key:k,valStart:m.index+m[0].length,labelStart:m.index});
+  });
+  hits.sort((a,b)=>a.labelStart-b.labelStart);
+  hits.forEach((h,i)=>{
+    const end=i+1<hits.length?hits[i+1].labelStart:resp.length;
+    out[h.key]=resp.slice(h.valStart,end).trim();
+  });
+  return out;
+}
 async function _ibGenMemCore(cfg,userText,sysTail,meta){
   meta=meta||{};
-  const sys='仅输出一个 JSON 对象，无任何其他文字或代码块围栏。字段：title（≤20字）、oneLine（≤40字）、content（≤300字）、domain（情感/日常/创作/思考 之一）、importance（1-10 整数）、valence（0-1 小数）、arousal（0-1 小数）、tags（≤4 个字符串的数组）。'+String(sysTail||'');
+  const aiN=cfgName(cfg);
+  const sys=String(sysTail||'').trim()
+    +'\n\n【输出格式要求（严格按字段逐行输出，不要输出其他内容，不要用代码块围栏）】\n'
+    +'标题：（这段记忆的名字，像日记标题一样自然，15字以内）\n'
+    +'概括：（一两句话，这段内容意味着什么，50字以内）\n'
+    +'内容：（100-300字。以'+aiN+'的视角回忆——发生了什么、有什么触动的瞬间或变化。用名字称呼，不要用代词。）\n'
+    +'领域：（从"情感""日常""创作""思考"中选一个）\n'
+    +'标签：（2-4个关键词，逗号分隔）\n'
+    +'效价：（0-1之间的数字，可精确到两位小数；0=消极，1=积极）\n'
+    +'唤醒度：（0-1之间的数字，0=平静，1=激烈）\n'
+    +'重要性：（1-10之间的整数）\n'
+    +'是否已解决：（是/否）\n'
+    +'可见性：（"公开"或"私密"——涉及亲密、身体、私人情感等内容应选私密）';
   const test=Object.assign({},cfg,{streaming:false,thinkingEnabled:false,promptCache:false});
-  const r=await callAI(test,[{role:'user',content:userText}],sys,()=>{},null,{maxTokens:700});
+  const r=await callAI(test,[{role:'user',content:userText}],sys,()=>{},null,null);/* v150-p：#1 输出上限不再单设小数——交还 callAI 的「服务商顶格＋超限自动降档」通道（与聊天正文同一套兜底）：思考型模型的隐藏思考与正文共用这份预算，小上限会被思考吃光导致空返回/截断，是历史上「返回内容不是 JSON」的帮凶之一 */
   let raw=String((r&&typeof r==='object')?(r.t||''):(r||''));
   if(!raw.trim()&&r&&r.k)raw=String(r.k);/* 个别中转把正文塞进 reasoning_content（k）：正文为空时回捞思考段 */
   raw=raw.replace(/```[a-zA-Z]*[ \t]*/g,'').trim();
-  const st=raw.indexOf('{'),en=raw.lastIndexOf('}');
-  if(st===-1||en<=st)throw new Error(raw?('返回内容不是 JSON：'+raw.slice(0,40)):('返回为空'+((r&&r.fin)?('（finish='+r.fin+'）'):'')));
-  const j=JSON.parse(raw.slice(st,en+1));
-  if(!j.title)throw new Error('缺少 title');
+  if(!raw)throw new Error('返回为空'+((r&&r.fin)?('（finish='+r.fin+'）'):''));
+  const fields=parseMemoryFieldsM(raw);const get=k=>fields[k]||'';
+  const title=(get('标题')||meta.titleFallback||'记忆').replace(/^[「『"“']+|[」』"”']+$/g,'');
+  const oneLine=get('概括');
+  const content=get('内容')||raw.slice(0,300);
+  const domain=['情感','日常','创作','思考'].find(d=>get('领域').includes(d))||(meta.domainFallback||'日常');
+  const tags=(get('标签')||'').split(/[,，、]/).map(t=>t.trim()).filter(Boolean);
+  const valence=(v=>isNaN(v)?0.5:Math.max(0,Math.min(1,v)))(parseFloat(get('效价')));
+  const arousal=(v=>isNaN(v)?0.3:Math.max(0,Math.min(1,v)))(parseFloat(get('唤醒度')));
   const mem={
     id:'mem_'+Date.now()+'_'+Math.floor(Math.random()*10000),
-    title:String(j.title).slice(0,40),
-    oneLine:String(j.oneLine||'').slice(0,80),
-    summary:String(j.oneLine||'').slice(0,80),
-    content:String(j.content||'').slice(0,600),
-    domain:['情感','日常','创作','思考'].indexOf(j.domain)!==-1?j.domain:(meta.domainFallback||'日常'),
-    tags:Array.isArray(j.tags)?j.tags.slice(0,4).map(t=>String(t).slice(0,12)):[],
-    importance:Math.max(1,Math.min(10,parseInt(j.importance)||5)),
-    valence:Math.max(0,Math.min(1,parseFloat(j.valence)||0.5)),
-    arousal:Math.max(0,Math.min(1,parseFloat(j.arousal)||0.3)),
-    pinned:false,resolved:false,visibility:'all',visibleTo:[],excludeFrom:[],
+    title:String(title).slice(0,40),
+    oneLine:String(oneLine).slice(0,80),
+    summary:String(oneLine).slice(0,80),
+    content:String(content).slice(0,600),
+    domain:domain,
+    tags:tags.slice(0,4).map(t=>String(t).slice(0,12)),
+    importance:Math.max(1,Math.min(10,parseInt(get('重要性'))||5)),
+    valence:valence,
+    arousal:arousal,
+    pinned:false,resolved:get('是否已解决').includes('是'),
+    visibility:get('可见性').includes('私密')?'private':'all',visibleTo:[],excludeFrom:[],
     rawSource:meta.rawSource||'chat',sourceId:meta.sourceId||'',activationCount:0,
     created:Date.now(),lastActivated:Date.now(),
     createdBy:'ai',createdByName:cfgName(cfg),editedByUser:false
@@ -9802,26 +9852,55 @@ async function _ibGenMemCore(cfg,userText,sysTail,meta){
   return mem;
 }
 async function saveMemoryFrom(list){
-  let cfg=_activeCfg;if(!cfg)return;
-  if(cfg._group){
+  const cfg0=_activeCfg;let cfg=cfg0;if(!cfg)return;
+  const isGroup=!!cfg._group;
+  if(isGroup){
     const util=pickGroupUtilCfg(cfg._group);
     if(!util){toast('群内没有可用的 API 成员');return}
     cfg=util;
   }
   if(!cfg.apiKey){toast('该 API 未配置 Key');return}
+  await loadMP();
+  const pa=mpAi(cfg);
+  /* v149-p：#2 生成范围兜底——只取「上下文条数」与 50 的较小者；封档线之前的消息一律不参与（选择模式同样受限，与电脑端同界；频道无封档概念） */
+  const cap=Math.max(2,Math.min(50,parseInt(isGroup?pa.grpLimit:pa.histLimit,10)||(isGroup?30:40)));
+  const seal=(!isGroup&&!_activeThread&&cfg0.sealTimestamp)||0;
   let src=list;
   if(!src){
-    src=_msgs.slice(-12);
-    if(src.length<2){toast('对话内容不足');return}
+    src=_msgs.filter(m=>(m.timestamp||0)>seal).slice(-cap);
+    if(src.length<2){toast('聊天记录太少，无法生成记忆');return}
+  }else{
+    const kept=src.filter(m=>(m.timestamp||0)>seal);
+    if(kept.length!==src.length){toast('选中内容包含封档线之前的消息，已阻止发送');return}
+    src=kept.slice(-50);
+    if(src.length<2){toast('选中的消息太少');return}
   }
   src=src.slice().sort((a,b)=>(a.timestamp||0)-(b.timestamp||0));
-  const me=(_about&&_about.name)||'用户';
-  const lines=src.map(m=>((m.role==='user'?me:(m.senderName||cfgName(cfg)))+'：'+String(m.content||'').slice(0,400))).join('\n');
+  const userName=(_about&&_about.name)||'用户';
+  const aiName=cfgName(cfg);
+  /* v149-p：#2 逐条冠名：user＝用户名，AI＝成员名（群聊按 senderName）；语音消息用文字稿顶上（原式取 content 恒为空行，属旧逻辑 BUG） */
+  let ls=src.map(m=>{
+    const speaker=m.role==='user'?userName:(isGroup?(m.senderName||aiName):aiName);
+    let t=String(m.content||'').trim();
+    if(!t&&m.voice)t=String((m.voice.transcript||'')).trim()||'（语音消息）';
+    return speaker+'：'+t.slice(0,300);
+  });
+  let transcript=ls.join('\n');
+  while(ls.length>2&&transcript.length>4000){ls.shift();transcript=ls.join('\n')}/* 超预算丢最旧、保最近（电脑端保头，此处修正为保最近） */
+  if(transcript.length>4200)transcript=transcript.slice(-4200);
+  let context='';
+  if(cfg.systemPrompt)context+='【AI的人设背景】'+String(cfg.systemPrompt).slice(0,500)+'\n\n';
+  if(cfg.relationship)context+='【与用户的关系】'+String(cfg.relationship).slice(0,200)+'\n\n';
+  const userText=context+(list?'【选中的对话记录】':'【对话记录】')+'\n'+transcript;
+  /* v149-p：#2 任务提示与电脑端逐字同源——以 AI 视角、用名字不用代词，User/char 不再混淆 */
+  const task='你正在为你和'+userName+'之间的记忆库写下一条新的记忆。\n'
+    +'写作规则：用「'+aiName+'」来称呼你自己，用「'+userName+'」来称呼对方。不要使用"我""你""对方""用户"这类代词——因为这条记忆可能会被其他人读到，只有使用名字才不会产生混淆。\n'
+    +'写的时候像在翻开一页日记，而不是在做会议纪要。你是这段经历的参与者，不是旁观者。';
   toast('正在生成记忆…');
   try{
-    const mem=await _ibGenMemCore(cfg,lines,'基于对话片段，从'+me+'的视角提炼一条值得长期保存的记忆。',{rawSource:'chat',sourceId:cfg.id});/* v136-a·v134-p：#2 改走共用管线，行为与原版一致 */
-    toast('已生成记忆：'+mem.title);
-  }catch(e){toast('生成失败：'+String((e&&e.message)||e).slice(0,60))}
+    const mem=await _ibGenMemCore(cfg,userText,task,{rawSource:'chat',sourceId:(cfg0&&cfg0.id)||cfg.id,titleFallback:'来自对话的记忆'});
+    toast((list?'记忆已从选中的消息中生成：':'记忆已从对话中生成：')+mem.title);
+  }catch(e){toast('生成记忆失败：'+String((e&&e.message)||e).slice(0,80))}
 }
 
 /* ═══════════ Auto Memory：注入块与标签执行（移植电脑版）═══════════ */
@@ -10206,20 +10285,51 @@ async function renderApiList(){
   });
 }
 let _apiDragMoved=false;
-function _apiTouchDrag(el){/* 触摸长按拖拽排序：拖起半透明 + 目标上下沿指示线，视觉对齐电脑端 */
-  let t0=null,dragging=false,ghostIdx=-1;
+function _apiTouchDrag(el){/* v150-p：#2 长按拖拽手感重做（两端同源）。
+   旧版病根：长按计时期内任何一像素位移都会取消计时——手指按下天然微颤，十次九次点不着（「手指不太好按」的直接根子）；
+   且拖起后页面滚动照跑、卡片本体纹丝不动，只有一根指示线，起没起拖全凭一次震动猜。
+   现：①按下 10px 容差——计时期内位移不超过容差不取消，超过才视为滚动意图放行；
+   ②拖起瞬间 document 级 touchmove 捕获 preventDefault 冻结页面滚动，松手即撤；
+   ③卡片跟手抬起（translateY＋轻放大投影），落点仍按目标卡上下沿指示线；
+   ④指尖靠近屏幕上下边缘自动滚屏（越靠边越快），长列表一次拖到底；⑤落位、入库与提示与旧版一致。 */
+  let t0=null,dragging=false,ghostIdx=-1,sx=0,sy=0,pid=null,asRaf=0,lastY=0;
+  const blockScroll=ev=>{ev.preventDefault()};
+  function engage(){
+    dragging=true;el.classList.add('api-dragging');
+    try{el.setPointerCapture(pid)}catch(_){}
+    try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}
+    document.addEventListener('touchmove',blockScroll,{passive:false});
+    if(asRaf)cancelAnimationFrame(asRaf);
+    asRaf=requestAnimationFrame(autoScroll);
+  }
+  function autoScroll(){/* 边缘自动滚屏：滚多少、基准 sy 就补多少，卡片视觉位置不跳；纯滚屏期指针不动也持续推进 */
+    if(!dragging){asRaf=0;return}
+    asRaf=requestAnimationFrame(autoScroll);
+    const vh=window.innerHeight,edge=Math.max(76,vh*0.13);
+    let v=0;
+    if(lastY<edge)v=-Math.ceil((edge-lastY)/edge*15);
+    else if(lastY>vh-edge)v=Math.ceil((lastY-(vh-edge))/edge*15);
+    if(v){window.scrollBy(0,v);sy-=v;el.style.transform='translateY('+(lastY-sy)+'px) scale(1.02)'}
+  }
   el.addEventListener('pointerdown',e=>{
     if(e.target.closest('.api-del'))return;
-    _apiDragMoved=false;ghostIdx=-1;
-    t0=setTimeout(()=>{dragging=true;el.classList.add('api-dragging');try{el.setPointerCapture(e.pointerId)}catch(_){}try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}},280);
+    _apiDragMoved=false;ghostIdx=-1;dragging=false;
+    sx=e.clientX;sy=e.clientY;lastY=e.clientY;pid=e.pointerId;
+    if(t0)clearTimeout(t0);
+    t0=setTimeout(()=>{t0=null;engage()},260);
   });
   el.addEventListener('pointermove',e=>{
-    if(!dragging){if(t0){clearTimeout(t0);t0=null}return}
+    lastY=e.clientY;
+    if(!dragging){
+      if(t0){const dx=e.clientX-sx,dy0=e.clientY-sy;if(dx*dx+dy0*dy0>100){clearTimeout(t0);t0=null}}
+      return;
+    }
     _apiDragMoved=true;e.preventDefault();
+    el.style.transform='translateY('+(e.clientY-sy)+'px) scale(1.02)';
     const items=[...document.querySelectorAll('#api-list .api-li')];
     items.forEach(x=>x.classList.remove('drop-above','drop-below'));
-    const over=items.find(x=>{const r=x.getBoundingClientRect();return e.clientY>=r.top&&e.clientY<=r.bottom});
-    if(over&&over!==el){
+    const over=items.find(x=>{if(x===el)return false;const r=x.getBoundingClientRect();return e.clientY>=r.top&&e.clientY<=r.bottom});
+    if(over){
       const r=over.getBoundingClientRect();
       const above=e.clientY<r.top+r.height/2;
       over.classList.add(above?'drop-above':'drop-below');
@@ -10228,8 +10338,10 @@ function _apiTouchDrag(el){/* 触摸长按拖拽排序：拖起半透明 + 目�
   });
   const fin=async()=>{
     if(t0){clearTimeout(t0);t0=null}
+    document.removeEventListener('touchmove',blockScroll,{passive:false});
+    if(asRaf){cancelAnimationFrame(asRaf);asRaf=0}
     if(!dragging)return;
-    dragging=false;el.classList.remove('api-dragging');
+    dragging=false;el.classList.remove('api-dragging');el.style.transform='';
     document.querySelectorAll('#api-list .api-li').forEach(x=>x.classList.remove('drop-above','drop-below'));
     const from=parseInt(el.dataset.apiIdx);
     if(ghostIdx<0||isNaN(from)){setTimeout(()=>{_apiDragMoved=false},60);return}
@@ -11539,7 +11651,7 @@ function _orientApply(){try{
   el=$('ui-bigtouch');if(el)el.addEventListener('click',async function(){var el9=this;try{await loadMP();_mp.ui=_mp.ui||{};_mp.ui.bigTouch=!_mp.ui.bigTouch;sw2(el9,!!_mp.ui.bigTouch);await saveMP();_uiApply();toast(_mp.ui.bigTouch?'触控目标已放大':'触控目标恢复标准')}catch(e){toast('设置保存失败，请重试');try{await loadMP();sw2(el9,!!(_mp.ui&&_mp.ui.bigTouch))}catch(e2){}}});
   setTimeout(function(){try{if(window.IBNative&&window.IBNative.available){var _bg=$('pres-bg');var _row=_bg&&_bg.closest('.tog');if(_row)_row.style.display=''}}catch(e){}},1200);/* v116-p：壳内显露「后台 Presence（App）」开关（桥在文末激活，故延时探测；浏览器 / PWA 保持隐藏） */
 })();
-var IB_VER='v147-p',IB_VER_DATE='2026-08-23';/* v86-m r3：版本号占位——展示于 PWA 卡、写入导出档与运行时 manifest */
+var IB_VER='v150-p',IB_VER_DATE='2026-08-24';/* v86-m r3：版本号占位——展示于 PWA 卡、写入导出档与运行时 manifest */
 (function _appVerDraw(){var e=document.getElementById('app-ver');if(e)e.textContent='InternalBeyond Mobile '+IB_VER+'（'+IB_VER_DATE+'）'})();
 function _lkVeilOff(){try{var v=document.getElementById('lk-preveil');if(v){v.classList.add('off');setTimeout(function(){try{v.remove()}catch(e){}},420)}}catch(e){}}/* fix-r4：预遮罩揭幕（任务 8） */
 async function _lkBoot(){try{await loadBgs()}catch(e){}var lk=_lkCfg();try{localStorage.setItem('ib_lockOn',lk&&lk.on?'1':'0')}catch(e){}/* v101-m：启动后把 DB 真值回写同步镜像 */if(lk&&lk.on)_lkShow();else _lkVeilOff()}
@@ -13167,7 +13279,7 @@ async function sendVoiceMsg(v){
   const cfg=_activeCfg;if(!cfg)return;
   if(_sendKeys.has(_convKey(cfg))){toast('等这条回复完成，或先停止');return}
   if(!cfg.apiKey&&!cfg._group){toast('这个配置还没有 API Key，请到 API 页填写');return}
-  const um={id:'msg_'+Date.now()+'_u',role:'user',content:'',voice:{dataUrl:v.dataUrl,mime:v.mime,duration:v.duration,transcript:v.transcript||''},friendId:cfg.id,timestamp:Date.now()};
+  const um={id:'msg_'+Date.now()+'_u',role:'user',content:'',voice:{dataUrl:v.dataUrl,mime:v.mime,duration:v.duration,transcript:v.transcript||'',tone:v.tone||''},friendId:cfg.id,timestamp:Date.now()};/* v149-p：#1 +tone（本地声学语气，定格随消息） */
   if(_activeThread)um.threadId=_activeThread.id;
   try{await dbPut('chatMessages',um)}catch(e){toast('本地保存失败');return}
   _presTouch();
@@ -13179,7 +13291,175 @@ async function sendVoiceMsg(v){
   box.scrollTop=box.scrollHeight;
   if(cfg._group)genReplyGroup(cfg);else genReply(cfg);
 }
-function _voiceApiLine(v){var d=Math.max(1,Math.round((v&&v.duration)||1));var t=((v&&v.transcript)||'').trim();return '[语音消息 '+d+'秒] '+(t||'（语音内容未能自动识别）')}
+function _voiceApiLine(v){var d=Math.max(1,Math.round((v&&v.duration)||1));var t=((v&&v.transcript)||'').trim();var tn=(v&&v.tone)?('｜声学语气参考: '+v.tone):'';return '[语音消息 '+d+'秒'+tn+'] '+(t||'（语音内容未能自动识别）')}/* v149-p：#1 语气段并入 API 等效文本——与电脑端 _voiceApiLine 同格式；本端聊天模型收不到原声，语气段恒附 */
+/* ── v149-p：#1 本地声学语气分析（移植电脑端 _vmToneAnalyze 并升级）────────
+   录音结束后本机计算语速/音量/停顿/基频/声线变化＋情绪融合（确定性、零联网），
+   产出一句短描述定格存入消息（voice.tone），仅拼进发给 API 的语音等效文本；
+   界面不显示、不动 system、不改旧消息文本——升级零缓存重建。分析失败静默跳过。 */
+var _vmACtx=null;
+async function _vmDecode(blob){
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)throw new Error('WebAudio 不可用');
+  if(!_vmACtx)_vmACtx=new AC();
+  const buf=await blob.arrayBuffer();
+  return await new Promise(function(res,rej){_vmACtx.decodeAudioData(buf,res,function(e){rej(e||new Error('音频解码失败'))})});
+}
+function _vmToneAnalyze(ab,transcript){
+  try{
+    if(!ab||!ab.length||ab.duration<0.6)return '';
+    const srcRate=ab.sampleRate,chN=ab.numberOfChannels,srcLen=ab.length;
+    /* 简易降采样到 ~16k：整数步长抽取（分析用途足够） */
+    const step=Math.max(1,Math.round(srcRate/16000)),sr=srcRate/step,n=Math.floor(srcLen/step);
+    const x=new Float32Array(n);
+    for(let c=0;c<chN;c++){const d=ab.getChannelData(c);for(let i=0;i<n;i++)x[i]+=d[i*step]/chN}
+    const frame=Math.round(sr*0.03),hop=Math.round(sr*0.015),nf=Math.max(1,Math.floor((n-frame)/hop));
+    if(nf<8)return '';
+    const _median=function(a){if(!a.length)return 0;const b=a.slice().sort(function(u,v){return u-v});const m=Math.floor(b.length/2);return b.length%2?b[m]:(b[m-1]+b[m])/2};
+    const rms=new Float32Array(nf);
+    for(let f=0;f<nf;f++){let s=0,o=f*hop;for(let i=0;i<frame;i++){const v=x[o+i];s+=v*v}rms[f]=Math.sqrt(s/frame)}
+    const sorted=Array.from(rms).sort(function(a,b){return a-b});
+    const p10=sorted[Math.floor(nf*0.10)]||0,p90=sorted[Math.floor(nf*0.90)]||0;
+    if(p90<0.004)return '';/* 几乎无声 */
+    const thr=Math.min(p90*0.65,Math.max(p90*0.18,p10*2.5,0.0025));/* 连续发声时 p10≈p90，阈值需封顶，避免整段被误判为静音 */
+    let first=-1,last=-1;const act=new Uint8Array(nf);
+    for(let f=0;f<nf;f++){if(rms[f]>=thr){act[f]=1;if(first<0)first=f;last=f}}
+    if(first<0||last-first<4)return '';
+    let actN=0,sumDb=0,sumR=0,sumR2=0;const activeRms=[];
+    for(let f=first;f<=last;f++){if(act[f]){const rv=rms[f];actN++;sumDb+=20*Math.log10(rv+1e-8);sumR+=rv;sumR2+=rv*rv;activeRms.push(rv)}}
+    const meanDb=sumDb/Math.max(1,actN),meanR=sumR/Math.max(1,actN);
+    const rmsStd=Math.sqrt(Math.max(0,sumR2/Math.max(1,actN)-meanR*meanR));
+    const energyCv=rmsStd/Math.max(1e-6,meanR);
+    const _segRms=function(a,b){let s=0,k=0;for(let f=Math.max(first,a);f<=Math.min(last,b);f++){if(act[f]){s+=rms[f];k++}}return k?s/k:0};
+    const span=last-first+1,seg=Math.max(3,Math.floor(span*0.28));
+    const earlyR=_segRms(first,first+seg-1),lateR=_segRms(last-seg+1,last);
+    const energyTailDb=(earlyR>0&&lateR>0)?20*Math.log10(lateR/earlyR):0;
+    /* 停顿：讲话跨度内的静音段占比与明显停顿次数 */
+    let pauseFrames=0,longPauses=0,run=0;
+    const hopSec=hop/sr;
+    for(let f=first;f<=last;f++){
+      if(!act[f]){run++;pauseFrames++}
+      else{if(run*hopSec>=0.35)longPauses++;run=0}
+    }
+    if(run*hopSec>=0.35)longPauses++;
+    const pauseRatio=pauseFrames/span;
+    /* 基频：活跃帧自相关（60–400Hz）。保留时间顺序，用于尾音和声线变化判断 */
+    const lagMin=Math.max(2,Math.floor(sr/400)),lagMax=Math.min(frame-2,Math.ceil(sr/60));
+    const f0seq=[];
+    for(let f=first;f<=last;f+=2){
+      if(!act[f])continue;
+      const o=f*hop;let e0=0;
+      for(let i=0;i<frame;i++){const v=x[o+i];e0+=v*v}
+      if(e0<=0)continue;
+      let best=0,bestLag=0;
+      for(let lag=lagMin;lag<=lagMax;lag++){
+        let s=0;const lim=frame-lag;
+        for(let i=0;i<lim;i+=2)s+=x[o+i]*x[o+i+lag];
+        if(s>best){best=s;bestLag=lag}
+      }
+      const q=bestLag?best/(e0*0.5):0;
+      if(bestLag&&q>0.32)f0seq.push({hz:sr/bestLag,f:f,q:Math.max(0,Math.min(1,q))});
+    }
+    let f0med=0,f0spread=0,f0TailDelta=0,f0Jitter=0,f0Quality=0;
+    if(f0seq.length>=6){
+      const f0vals=f0seq.map(function(v){return v.hz});
+      f0med=_median(f0vals);
+      const f0sorted=f0vals.slice().sort(function(a,b){return a-b});
+      const q1=f0sorted[Math.floor(f0sorted.length*0.25)],q3=f0sorted[Math.floor(f0sorted.length*0.75)];
+      f0spread=(q3-q1)/Math.max(1,f0med);
+      const edge=Math.max(2,Math.floor(f0seq.length*0.30));
+      const fEarly=_median(f0seq.slice(0,edge).map(function(v){return v.hz}));
+      const fLate=_median(f0seq.slice(-edge).map(function(v){return v.hz}));
+      if(fEarly&&fLate)f0TailDelta=(fLate-fEarly)/Math.max(1,f0med);
+      let jd=0,jn=0,qs=0;
+      for(let i=0;i<f0seq.length;i++){
+        qs+=f0seq[i].q;
+        if(i){const d=Math.abs(f0seq[i].hz-f0seq[i-1].hz);if(d/f0med<0.45){jd+=d;jn++}}
+      }
+      f0Jitter=(jn?jd/jn:0)/Math.max(1,f0med);
+      f0Quality=qs/f0seq.length;
+    }
+    /* 语速：中文按字数，其他语言按词数 / 有效发声时长 */
+    const txt=String(transcript||'').trim();
+    const cjk=(txt.match(/[\u3400-\u9fff]/g)||[]).length;
+    const words=(txt.match(/[A-Za-z0-9]+(?:'[A-Za-z]+)?/g)||[]).length;
+    const voicedSec=actN*hopSec;
+    const useCjk=cjk>=Math.max(4,words),units=useCjk?cjk:words,unitName=useCjk?'字':'词';
+    let rate=0;if(units>=(useCjk?4:2)&&voicedSec>0.8)rate=units/voicedSec;
+    const slowThr=useCjk?2.6:1.5,fastThr=useCjk?5.4:3.2;
+    const rateDesc=!rate?'语速未知':(rate<slowThr?'语速偏慢':(rate>fastThr?'语速偏快':'语速中等'))+'('+rate.toFixed(1)+unitName+'/秒)';
+    const volumeDesc=meanDb<-31?'音量很低':meanDb<-24?'音量偏低':meanDb>-11?'音量较大':'音量中等';
+    const pauseDesc=(pauseRatio>0.42||longPauses>=3)?'停顿较多('+longPauses+'次明显停顿)':(pauseRatio>0.24||longPauses>=1)?'有少量停顿':'停顿较少';
+    const pitchDesc=!f0med?'':(f0spread>0.30?'语调起伏明显':f0spread<0.08?'语调较平':'语调起伏中等');
+
+    /* 声线变化：只描述本段内可观测变化，不建立说话人身份或长期基线 */
+    const voice=[];
+    const soft=meanDb<-21&&energyCv<0.72,strong=meanDb>-14;
+    if(soft)voice.push('声线偏轻柔');else if(strong)voice.push('声线偏有力');
+    if(f0TailDelta>0.14)voice.push('尾音明显上扬');else if(f0TailDelta>0.07)voice.push('尾音轻微上扬');else if(f0TailDelta<-0.14)voice.push('尾音明显下沉');else if(f0TailDelta<-0.07)voice.push('尾音轻微下沉');
+    if(energyTailDb>3.5)voice.push('后段音量渐强');else if(energyTailDb<-3.5)voice.push('后段音量渐弱');
+    if(f0Jitter>0.13&&f0Quality>0.45&&f0spread>0.12)voice.push('音高有轻微颤动倾向');
+    /* ── 手机端升级段（在电脑端分析器之上追加三项，同样本地·确定性·零联网）──
+       ① 音色明暗：一阶差分能量比≈谱倾斜（高频占比），只在明显偏亮/偏沉时报；
+       ② 发声清晰度：基频可判帧占比（voiced ratio）——清晰饱满 vs 带气声含混；
+       ③ 音区：按基频中位数标偏低/偏高，与「基频约xxHz」并列，便于模型直读。 */
+    let hfS=0,hfN=0,visN=0;
+    for(let f=first;f<=last;f+=2){if(act[f])visN++}
+    for(let f=first;f<=last;f+=3){
+      if(!act[f])continue;const o=f*hop;let e0=0,e1=0;
+      for(let i=1;i<frame;i++){const v=x[o+i];e0+=v*v;const dv=v-x[o+i-1];e1+=dv*dv}
+      if(e0>0){hfS+=e1/e0;hfN++}
+    }
+    const tilt9=hfN?hfS/hfN:0,vr9=visN?f0seq.length/visN:0;
+    if(hfN){if(tilt9>0.52)voice.push('音色偏明亮清脆');else if(tilt9<0.13)voice.push('音色偏低沉柔和')}
+    if(f0seq.length>=6){if(vr9>=0.8&&f0Quality>0.5)voice.push('发声清晰');else if(vr9<0.3)voice.push('带气声或含混倾向')}
+    const reg9=!f0med?'':(f0med<115?'音区偏低':(f0med>255?'音区偏高':''));
+    if(!voice.length&&f0med)voice.push(f0spread<0.08?'声线较稳定':'声线有自然起伏');
+
+    /* 本地情绪融合：借鉴“声学特征 + 文字语义”的两阶段思路，但不增加第二次联网调用 */
+    const score={'亲昵/撒娇':0,'开心':0,'兴奋':0,'愤怒/激动':0,'难过/低落':0,'疲惫':0,'紧张/不安':0,'犹豫/不确定':0,'平静/中性':0.8};
+    const add=function(k,v){score[k]+=v};
+    if(/(宝贝|宝宝|亲爱的|老公|老婆|爹地|哥哥|姐姐|想你|爱你|抱抱|亲亲|么么|撒娇|陪我|哄我|叫我)/i.test(txt))add('亲昵/撒娇',3.6);
+    if(/(开心|高兴|好棒|太好|喜欢|幸福|哈哈|嘿嘿|笑死|爱死)/i.test(txt))add('开心',3.4);
+    if(/(激动|兴奋|迫不及待|太爽|绝了|冲啊|哇塞)/i.test(txt))add('兴奋',3.6);
+    if(/(生气|气死|愤怒|烦死|闭嘴|讨厌|滚|凭什么|受够)/i.test(txt))add('愤怒/激动',4.0);
+    if(/(难过|伤心|委屈|想哭|哭了|失落|心疼|痛苦|不开心|崩溃)/i.test(txt))add('难过/低落',4.0);
+    if(/(好累|累死|疲惫|困死|好困|没力气|撑不住|想睡|熬不动)/i.test(txt))add('疲惫',4.2);
+    if(/(紧张|害怕|怕死|担心|焦虑|不安|慌|怎么办|完了)/i.test(txt))add('紧张/不安',3.9);
+    if(/(不知道|不确定|也许|可能吧|要不要|可以吗|行吗|好吗|是不是)/i.test(txt))add('犹豫/不确定',2.8);
+    if(/(没事|还好|没关系|慢慢来|挺好的|平静|放心)/i.test(txt))add('平静/中性',2.2);
+    const endingSoft=/[嘛呀啦呐哟哦诶哼～~]{1,3}[。！？!?]*$/.test(txt);
+    if(endingSoft)add('亲昵/撒娇',0.8);
+    if(rate){
+      if(rate<slowThr){add('疲惫',1.1);add('难过/低落',0.7);add('平静/中性',0.5);add('亲昵/撒娇',0.3)}
+      else if(rate>fastThr){add('兴奋',1.2);add('紧张/不安',0.9);add('愤怒/激动',0.8)}
+    }
+    if(meanDb<-25){add('疲惫',1.1);add('难过/低落',0.8);add('亲昵/撒娇',0.4)}
+    else if(meanDb>-13){add('兴奋',1.2);add('愤怒/激动',1.1);add('开心',0.5)}
+    if(pauseRatio>0.40||longPauses>=3){add('疲惫',1.2);add('难过/低落',0.9);add('紧张/不安',0.5)}
+    else if(pauseRatio<0.12){add('开心',0.4);add('兴奋',0.4)}
+    if(f0spread>0.30){add('兴奋',0.9);add('紧张/不安',0.7);add('亲昵/撒娇',0.4)}
+    else if(f0med&&f0spread<0.08){add('平静/中性',0.9);add('疲惫',0.3)}
+    if(f0TailDelta>0.10){add('亲昵/撒娇',1.1);add('开心',0.3);add('犹豫/不确定',0.3)}
+    else if(f0TailDelta<-0.10){add('难过/低落',0.5);add('疲惫',0.5);add('平静/中性',0.3)}
+    if(soft){add('亲昵/撒娇',0.7);add('平静/中性',0.7);add('疲惫',0.3)}
+    if(strong&&rate>fastThr){add('愤怒/激动',0.9);add('兴奋',0.8)}
+    if(energyCv>0.75){add('兴奋',0.5);add('紧张/不安',0.4);add('愤怒/激动',0.3)}
+    else if(energyCv<0.35){add('平静/中性',0.7);add('疲惫',0.2)}
+    if(endingSoft&&soft&&f0TailDelta>0.05)add('亲昵/撒娇',1.2);
+    const ranked=Object.keys(score).sort(function(a,b){return score[b]-score[a]});
+    const top=ranked[0],second=ranked[1],topScore=score[top],gap=topScore-score[second];
+    let emotion=top;
+    if(topScore<2.2)emotion='平静/中性';
+    else if(score[second]>=2.8&&gap<0.9&&second!=='平静/中性')emotion=top+'，兼有'+second;
+    const confidence=(topScore>=6&&gap>=1.2)?'较高':topScore>=3.5?'中等':'较低';
+
+    const parts=['情绪倾向:'+emotion+'('+confidence+'置信)'];
+    if(voice.length)parts.push('声线/变化:'+voice.slice(0,4).join('、'));
+    parts.push(rateDesc,volumeDesc,pauseDesc);
+    if(f0med)parts.push('基频约'+Math.round(f0med)+'Hz'+(reg9?('·'+reg9):''),pitchDesc);
+    return parts.filter(Boolean).join('；');
+  }catch(e){return ''}
+}
 var _vmAudio=null,_vmCur=null;
 function _vmToggle(el,v){
   if(!v||!v.dataUrl)return;
@@ -15960,7 +16240,7 @@ body.theme-infernal .ibfc-send{background:linear-gradient(180deg,#4d7bb4,#28517f
 .m-text:empty{display:none}
 /* API 列表（电脑端样式） */
 .api-li{touch-action:pan-y;position:relative;user-select:none;-webkit-user-select:none}
-.api-li.api-dragging{opacity:0.4}
+.api-li.api-dragging{opacity:0.96;position:relative;z-index:5;box-shadow:0 16px 38px rgba(40,70,120,0.3),0 0 0 1.5px var(--acc);transition:none;will-change:transform}/* v150-p：#2 拖起改「抬起」视觉——跟手位移由 JS 写 transform */
 .api-li.drop-above{box-shadow:0 -2px 0 0 var(--acc)}
 .api-li.drop-below{box-shadow:0 2px 0 0 var(--acc)}
 .api-ava{width:40px;height:40px;flex:none}
